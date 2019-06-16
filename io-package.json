@@ -5,41 +5,17 @@
 		"news": {
 			"0.0.1": {
 				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"zh-cn": "首次出版"
+				"de": "Erstveröffentlichung"
 			}
 		},
 		"title": "Blebox",
 		"titleLang": {
 			"en": "Blebox",
-			"de": "Blebox",
-			"ru": "Blebox",
-			"pt": "Blebox",
-			"nl": "Blebox",
-			"fr": "Blebox",
-			"it": "Blebox",
-			"es": "Blebox",
-			"pl": "Blebox",
-			"zh-cn": "Blebox"
+			"de": "Blebox"
 		},
 		"desc": {
 			"en": "Adapter für Bleboxsysteme",
-			"de": "Adapter für Bleboxsysteme",
-			"ru": "Adapter für Bleboxsysteme",
-			"pt": "Adapter für Bleboxsysteme",
-			"nl": "Adapter für Bleboxsysteme",
-			"fr": "Adapter für Bleboxsysteme",
-			"it": "Adapter für Bleboxsysteme",
-			"es": "Adapter für Bleboxsysteme",
-			"pl": "Adapter für Bleboxsysteme",
-			"zh-cn": "Adapter für Bleboxsysteme"
+			"de": "Adapter für Bleboxsysteme"
 		},
 		"authors": [
 			"Kai van Nuis <kai@vannuis.de>"
