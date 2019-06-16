@@ -36,8 +36,10 @@ class Blebox extends utils.Adapter {
 
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info("config option1: " + this.config.option1);
-		this.log.info("config option2: " + this.config.option2);
+		this.log.info("config host: " + this.config.host);
+		this.log.info("config port: " + this.config.port);
+		this.log.info("config user: " + this.config.user);
+		this.log.info("config pass: " + "******");
 
 		/*
 		For every state in the system there has to be also an object of type state
