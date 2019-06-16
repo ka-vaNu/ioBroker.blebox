@@ -16,18 +16,18 @@
 				"zh-cn": "首次出版"
 			}
 		},
-		"title": "Blebox Konfiguration",
+		"title": "Blebox",
 		"titleLang": {
-			"en": "Blebox Konfiguration",
-			"de": "Blebox Konfiguration",
-			"ru": "Blebox Konfiguration",
-			"pt": "Blebox Konfiguration",
-			"nl": "Blebox Konfiguration",
-			"fr": "Blebox Konfiguration",
-			"it": "Blebox Konfiguration",
-			"es": "Blebox Konfiguration",
-			"pl": "Blebox Konfiguration",
-			"zh-cn": "Blebox Konfiguration"
+			"en": "Blebox",
+			"de": "Blebox",
+			"ru": "Blebox",
+			"pt": "Blebox",
+			"nl": "Blebox",
+			"fr": "Blebox",
+			"it": "Blebox",
+			"es": "Blebox",
+			"pl": "Blebox",
+			"zh-cn": "Blebox"
 		},
 		"desc": {
 			"en": "Adapter für Bleboxsysteme",
@@ -68,8 +68,10 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
+		"host": "",
+		"port": "",
+		"user": "",
+		"pass": ""
 	},
 	"objects": [],
 	"instanceObjects": []
