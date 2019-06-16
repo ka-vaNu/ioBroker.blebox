@@ -1,0 +1,76 @@
+{
+	"common": {
+		"name": "blebox",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Blebox Konfiguration",
+		"titleLang": {
+			"en": "Blebox Konfiguration",
+			"de": "Blebox Konfiguration",
+			"ru": "Blebox Konfiguration",
+			"pt": "Blebox Konfiguration",
+			"nl": "Blebox Konfiguration",
+			"fr": "Blebox Konfiguration",
+			"it": "Blebox Konfiguration",
+			"es": "Blebox Konfiguration",
+			"pl": "Blebox Konfiguration",
+			"zh-cn": "Blebox Konfiguration"
+		},
+		"desc": {
+			"en": "Adapter für Bleboxsysteme",
+			"de": "Adapter für Bleboxsysteme",
+			"ru": "Adapter für Bleboxsysteme",
+			"pt": "Adapter für Bleboxsysteme",
+			"nl": "Adapter für Bleboxsysteme",
+			"fr": "Adapter für Bleboxsysteme",
+			"it": "Adapter für Bleboxsysteme",
+			"es": "Adapter für Bleboxsysteme",
+			"pl": "Adapter für Bleboxsysteme",
+			"zh-cn": "Adapter für Bleboxsysteme"
+		},
+		"authors": [
+			"Kai van Nuis <kai@vannuis.de>"
+		],
+		"keywords": [
+			"blebox",
+			"smart home",
+			"iobroker"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "blebox.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/ka-vaNu/ioBroker.blebox/master/admin/blebox.png",
+		"readme": "https://github.com/ka-vaNu/ioBroker.blebox/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "iot-systems",
+		"compact": true,
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=1.4.2"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
