@@ -1,0 +1,11 @@
+{
+    "device": {
+        "deviceName": "MyCustomDeviceName",
+        "type": "shutterBox",
+        "fv": "0.176",
+        "hv": "0.6",
+        "apiLevel": "20180604",
+        "id": "1afe34db9437",
+        "ip": "192.168.1.11"
+    }
+}

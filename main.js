@@ -11,6 +11,7 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 const req = require("request");
+const fs = require("fs");
 
 class Blebox extends utils.Adapter {
 
@@ -37,14 +38,32 @@ class Blebox extends utils.Adapter {
 		this.log.info("config port: " + this.config.port);
 		this.log.info("config user: " + this.config.user);
 		this.log.info("config pass: " + "******");
-		this.log.info("Test " + "******");
 
+		let source = "";
+		source = "local";
+		let buf = new Buffer("");
+		let resp = "";
+		switch (source) {
+			case "local":
+				this.log.info("Before ");
+				buf = fs.readFileSync("/opt/iobroker/node_modules/iobroker.blebox/test/shutterbox/api_device_state.json");
+				resp = buf.toString("UTF-8");
+				this.log.info("After ");
+				break;
+			case "remote":
+				req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
+					console.log("error:", error); // Print the error if one occurred
+					console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
+					console.log("body:", body); // Print the HTML for the Google homepage.
+					resp = body;
+				});
+				break;
+		}
+		this.log.info("Response: " + resp);
+		//let dev = new Object;
+		const dev = JSON.parse(resp);
+		this.log.info("Type: " + dev.device.type);
 		// Typ der Blebox identifizieren
-		req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
-			console.log("error:", error); // Print the error if one occurred
-			console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-			console.log("body:", body); // Print the HTML for the Google homepage.
-		});
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
