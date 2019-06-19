@@ -62,24 +62,38 @@ class Blebox extends utils.Adapter {
 		this.log.info("Response: " + resp);
 		//let dev = new Object;
 		const dev = JSON.parse(resp);
-		this.log.info("Type: " + dev.device.type);
 		// Typ der Blebox identifizieren
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
-		await this.setObjectAsync("testVariable", {
+		this.log.info("Type: " + dev.device.type);
+		await this.setObjectAsync("type", {
 			type: "state",
 			common: {
-				name: "testVariable",
-				type: "boolean",
-				role: "indicator",
+				name: "type",
+				type: "info",
+				role: "text",
 				read: true,
 				write: true,
 			},
 			native: {},
 		});
+
+		await this.setObjectAsync("deviceName", {
+			type: "state",
+			common: {
+				name: "deviceName",
+				type: "info",
+				role: "text",
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.setStateAsync("type", dev.device.type);
+		await this.setStateAsync("deviceName", dev.device.deviceName);
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
@@ -89,14 +103,13 @@ class Blebox extends utils.Adapter {
 		you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
 		*/
 		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync("testVariable", true);
 
 		// same thing, but the value is flagged "ack"
 		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync("testVariable", { val: true, ack: true });
+		//await this.setStateAsync("testVariable", { val: true, ack: true });
 
 		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
+		//await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
 
 		// examples for the checkPassword/checkGroup functions
 		let result = await this.checkPasswordAsync("admin", "iobroker");
