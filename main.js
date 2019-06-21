@@ -68,18 +68,36 @@ class Blebox extends utils.Adapter {
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
+		for (const attr in dev.device) {
+			if (dev.device.hasOwnProperty(attr)) {
+				await this.setObjectAsync(attr, {
+					type: "state",
+					common: {
+						name: attr,
+						type: "info",
+						role: "text",
+						read: true,
+						write: true,
+					},
+					native: {},
+				});
+				await this.setStateAsync(attr, dev.device[attr]);
+			}
+		}
+
+		/* 		
 		this.log.info("Type: " + dev.device.type);
-		await this.setObjectAsync("type", {
-			type: "state",
-			common: {
-				name: "type",
-				type: "info",
-				role: "text",
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
+			await this.setObjectAsync("type", {
+				type: "state",
+				common: {
+					name: "type",
+					type: "info",
+					role: "text",
+					read: true,
+					write: true,
+				},
+				native: {},
+			});
 
 		await this.setObjectAsync("deviceName", {
 			type: "state",
@@ -92,6 +110,7 @@ class Blebox extends utils.Adapter {
 			},
 			native: {},
 		});
+ 		*/		
 		await this.setStateAsync("type", dev.device.type);
 		await this.setStateAsync("deviceName", dev.device.deviceName);
 
