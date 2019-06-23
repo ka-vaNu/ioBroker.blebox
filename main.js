@@ -1,17 +1,9 @@
 "use strict";
 
-/*
- * Created with @iobroker/create-adapter v1.15.1
- */
-
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require("@iobroker/adapter-core");
-
-// Load your modules here, e.g.:
-// const fs = require("fs");
 const req = require("request");
 const fs = require("fs");
+//const bb_util = require("./blebox_util").default;
 
 class Blebox extends utils.Adapter {
 
@@ -52,67 +44,16 @@ class Blebox extends utils.Adapter {
 				break;
 			case "remote":
 				req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
-					console.log("error:", error); // Print the error if one occurred
-					console.log("statusCode:", response && response.statusCode); // Print the response status code if a response was received
-					console.log("body:", body); // Print the HTML for the Google homepage.
+					console.log("error:", error);
+					console.log("statusCode:", response && response.statusCode);
+					console.log("body:", body);
 					resp = body;
 				});
 				break;
 		}
 		this.log.info("Response: " + resp);
-		//let dev = new Object;
 		const dev = JSON.parse(resp);
-		// Typ der Blebox identifizieren
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
-		for (const attr in dev.device) {
-			if (dev.device.hasOwnProperty(attr)) {
-				await this.setObjectAsync(attr, {
-					type: "state",
-					common: {
-						name: attr,
-						type: "info",
-						role: "text",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
-				await this.setStateAsync(attr, dev.device[attr]);
-			}
-		}
-
-		/* 		
-		this.log.info("Type: " + dev.device.type);
-			await this.setObjectAsync("type", {
-				type: "state",
-				common: {
-					name: "type",
-					type: "info",
-					role: "text",
-					read: true,
-					write: true,
-				},
-				native: {},
-			});
-
-		await this.setObjectAsync("deviceName", {
-			type: "state",
-			common: {
-				name: "deviceName",
-				type: "info",
-				role: "text",
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
- 		*/		
-		await this.setStateAsync("type", dev.device.type);
-		await this.setStateAsync("deviceName", dev.device.deviceName);
+		await this.init_state_object(dev);
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
@@ -195,10 +136,30 @@ class Blebox extends utils.Adapter {
 	// 			// Send response in callback if required
 	// 			if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
 	// 		}
-	// 	}
+	// 	} 
 	// }
 
+	async init_state_object(state_response) {
+		for (const attr in state_response.device) {
+			if (state_response.device.hasOwnProperty(attr)) {
+				await this.setObjectAsync("state." + attr, {
+					type: "state",
+					common: {
+						name: attr,
+						type: "info",
+						role: "text",
+						read: true,
+						write: true,
+					},
+					native: {},
+				});
+				await this.setStateAsync("state." + attr, state_response.device[attr]);
+			}
+		}
+	}
+
 }
+
 
 // @ts-ignore parent is a valid property on module
 if (module.parent) {
