@@ -32,7 +32,9 @@ class Blebox extends utils.Adapter {
 		this.log.info("config user: " + this.config.user);
 		this.log.info("config pass: " + "******");
 
-		await this.init_datapoints();
+		await this.initDatapoints();
+		await this.getDeviceState();
+		await this.getUptime();
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
@@ -118,7 +120,7 @@ class Blebox extends utils.Adapter {
 	// 	} 
 	// }
 
-	async init_datapoints() {
+	async initDatapoints() {
 		let dp = null;
 		let dp_value = null;
 		for (dp in tools.datapoints) {
@@ -137,7 +139,9 @@ class Blebox extends utils.Adapter {
 			});
 
 		}
-		/*let buf = new Buffer("");
+	}
+	async getDeviceState() {
+		let buf = new Buffer("");
 		let resp = "";
 		if (mock) {
 			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_state.json");
@@ -153,21 +157,24 @@ class Blebox extends utils.Adapter {
 		this.log.info("Response: " + resp);
 		const state_response = JSON.parse(resp);
 
+		let dp = null;
 		for (const attr in state_response.device) {
 			if (state_response.device.hasOwnProperty(attr)) {
-				await this.setStateAsync("state." + attr, state_response.device[attr]);
+				dp = tools.getDatapoint("deviceState", attr);
+				this.log.debug(dp + " = " + state_response.device[attr]);
+				await this.setStateAsync(dp, state_response.device[attr]);
 			}
-		}*/
+		}
 	}
 
-	async get_uptime() {
+	async getUptime() {
 		let buf = new Buffer("");
 		let resp = "";
 		if (mock) {
-			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_state.json");
+			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_uptime.json");
 			resp = buf.toString("UTF-8");
 		} else {
-			req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
+			req("http://" + this.config.host + ":" + this.config.port + "/api/device/uptime", function (error, response, body) {
 				console.log("error:", error);
 				console.log("statusCode:", response && response.statusCode);
 				console.log("body:", body);
@@ -175,6 +182,45 @@ class Blebox extends utils.Adapter {
 			});
 		}
 		this.log.info("Response: " + resp);
+		const response = JSON.parse(resp);
+
+		let dp = null;
+		for (const attr in response) {
+			if (response.hasOwnProperty(attr)) {
+				dp = tools.getDatapoint("deviceUptime", attr);
+				this.log.debug(dp + " = " + response[attr]);
+				await this.setStateAsync(dp, response[attr]);
+			}
+		}
+
+	}
+
+	async getSettings() {
+		let buf = new Buffer("");
+		let resp = "";
+		if (mock) {
+			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_settings_state.json");
+			resp = buf.toString("UTF-8");
+		} else {
+			req("http://" + this.config.host + ":" + this.config.port + "/api/settings/state", function (error, response, body) {
+				console.log("error:", error);
+				console.log("statusCode:", response && response.statusCode);
+				console.log("body:", body);
+				resp = body;
+			});
+		}
+		this.log.info("Response: " + resp);
+		const response = JSON.parse(resp);
+
+		// TODO: Parse Object
+		/*let dp = null;
+		for (const attr in response) {
+			if (response.hasOwnProperty(attr)) {
+				dp = tools.getDatapoint("settingsState", attr);
+				this.log.debug(dp + " = " + response[attr]);
+				await this.setStateAsync(dp, response[attr]);
+			}
+		}*/
 
 	}
 }
