@@ -3,7 +3,8 @@
 const utils = require("@iobroker/adapter-core");
 const req = require("request");
 const fs = require("fs");
-//const bb_util = require("./blebox_util").default;
+const tools = require(__dirname + "/lib/tools");
+const mock = true;
 
 class Blebox extends utils.Adapter {
 
@@ -31,29 +32,7 @@ class Blebox extends utils.Adapter {
 		this.log.info("config user: " + this.config.user);
 		this.log.info("config pass: " + "******");
 
-		let source = "";
-		source = "local";
-		let buf = new Buffer("");
-		let resp = "";
-		switch (source) {
-			case "local":
-				this.log.info("Before ");
-				buf = fs.readFileSync("/opt/iobroker/node_modules/iobroker.blebox/test/shutterbox/api_device_state.json");
-				resp = buf.toString("UTF-8");
-				this.log.info("After ");
-				break;
-			case "remote":
-				req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
-					console.log("error:", error);
-					console.log("statusCode:", response && response.statusCode);
-					console.log("body:", body);
-					resp = body;
-				});
-				break;
-		}
-		this.log.info("Response: " + resp);
-		const dev = JSON.parse(resp);
-		await this.init_state_object(dev);
+		await this.init_datapoints();
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
@@ -139,25 +118,65 @@ class Blebox extends utils.Adapter {
 	// 	} 
 	// }
 
-	async init_state_object(state_response) {
+	async init_datapoints() {
+		let dp = null;
+		let dp_value = null;
+		for (dp in tools.datapoints) {
+			dp_value = tools.datapoints[dp];
+			this.log.info(dp + " = " + JSON.stringify(dp_value));
+			await this.setObjectAsync(dp, {
+				type: dp_value.type,
+				common: {
+					name: dp_value.name,
+					type: dp_value.type,
+					role: dp_value.role,
+					read: dp_value.read,
+					write: dp_value.write,
+				},
+				native: {},
+			});
+
+		}
+		/*let buf = new Buffer("");
+		let resp = "";
+		if (mock) {
+			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_state.json");
+			resp = buf.toString("UTF-8");
+		} else {
+			req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
+				console.log("error:", error);
+				console.log("statusCode:", response && response.statusCode);
+				console.log("body:", body);
+				resp = body;
+			});
+		}
+		this.log.info("Response: " + resp);
+		const state_response = JSON.parse(resp);
+
 		for (const attr in state_response.device) {
 			if (state_response.device.hasOwnProperty(attr)) {
-				await this.setObjectAsync("state." + attr, {
-					type: "state",
-					common: {
-						name: attr,
-						type: "info",
-						role: "text",
-						read: true,
-						write: true,
-					},
-					native: {},
-				});
 				await this.setStateAsync("state." + attr, state_response.device[attr]);
 			}
-		}
+		}*/
 	}
 
+	async get_uptime() {
+		let buf = new Buffer("");
+		let resp = "";
+		if (mock) {
+			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_state.json");
+			resp = buf.toString("UTF-8");
+		} else {
+			req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
+				console.log("error:", error);
+				console.log("statusCode:", response && response.statusCode);
+				console.log("body:", body);
+				resp = body;
+			});
+		}
+		this.log.info("Response: " + resp);
+
+	}
 }
 
 
