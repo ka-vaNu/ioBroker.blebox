@@ -5,7 +5,9 @@ const axios = require("axios");
 const fs = require("fs");
 const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
-const mock = true;
+//const mock = "locationMockFile"; 	// mock via filesystem
+const mock = "locationMockUrl"; 	// local mock-server https://github.com/smollweide/node-mock-server
+//const mock = "locationUrl";		// communicate with blebox
 
 class Blebox extends utils.Adapter {
 
@@ -154,32 +156,45 @@ class Blebox extends utils.Adapter {
 	 */
 	async getSimpleObject(type) {
 		let states = {};
+		let locationMockFile = "";
+		let locationMockUrl = "";
+		let locationUrl = "";
+		this.log.info("getSimpleObject: " + type);
 		switch (type) {
 			case "deviceState":
-				if (mock) {
-					states = await this.simpleObjectFileGetter("/test/shutterbox/api_device_state.json");
-				} else {
-					states = this.simpleObjectUrlGetter("/api/device/state");
-				}
-				return states;
+				locationMockFile = "/test/shutterbox/api_device_state.json";
+				locationMockUrl = "/rest/v1/api/device/state";
+				locationUrl = "/api/device/state";
+				break;
 			case "deviceUptime":
-				if (mock) {
-					states = await this.simpleObjectFileGetter("/test/shutterbox/api_device_uptime.json");
-				} else {
-					states = this.simpleObjectUrlGetter("/api/device/uptime");
-				}
-				return states;
+				locationMockFile = "/test/shutterbox/api_device_uptime.json";
+				locationMockUrl = "/rest/v1/api/device/uptime";
+				locationUrl = "/api/device/uptime";
+				break;
 			case "settingsState":
-				if (mock) {
-					states = await this.simpleObjectFileGetter("/test/shutterbox/api_settings_state.json");
-				} else {
-					states = this.simpleObjectUrlGetter("/api/settings/state");
-				}
-				return states;
-
+				locationMockFile = "/test/shutterbox/api_settings_state.json";
+				locationMockUrl = "/rest/v1/api/settings/state";
+				locationUrl = "/api/settings/state";
+				break;
 			default:
-				return {};
+				break;
 		}
+		this.log.info("getSimpleObject: locationMockFile = " + locationMockFile);
+		this.log.info("getSimpleObject: locationMockUrl = " + locationMockUrl);
+		this.log.info("getSimpleObject: locationUrl = " + locationUrl);
+		this.log.info("getSimpleObject: mock = " + mock);
+		switch (mock) {
+			case "locationMockFile":
+				states = await this.simpleObjectFileGetter(locationMockFile);
+				break;
+			case "locationMockUrl":
+				states = await this.simpleObjectUrlGetter(locationMockUrl);
+				break;
+			case "locationUrl":
+				states = await this.simpleObjectUrlGetter(locationUrl);
+				break;
+		}
+		return states;
 	}
 
 	/**
@@ -212,20 +227,17 @@ class Blebox extends utils.Adapter {
 	async simpleObjectUrlGetter(url) {
 		let states = {};
 		const iob = this;
-		await axios.default.get("http://" + this.config.host + ":" + this.config.port + url)
-			.then(function (response) {
-				console.log("body:", response.data);
-				const state_response = JSON.parse(response.data);
-				try {
-					states = dot.dot(state_response);
-				} catch (error) {
-					iob.log.error("simpleObjectUrlGetter: " + error);
-				}
-				return states;
-			})
-			.then(function (error) {
-				console.log("error:", error);
-			});
+		const res = "http://" + this.config.host + ":" + this.config.port + url;
+		this.log.info("URL = " + res);
+		const response = await axios.default.get(res);
+		this.log.info("body:" + JSON.stringify(response.data));
+		//const state_response = JSON.parse(response.data);
+		try {
+			states = dot.dot(response.data);
+		} catch (error) {
+			iob.log.error("simpleObjectUrlGetter: " + error);
+		}
+		return states;
 	}
 
 	/**
