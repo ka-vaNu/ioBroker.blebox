@@ -1,8 +1,9 @@
 "use strict";
 
 const utils = require("@iobroker/adapter-core");
-const req = require("request");
+const axios = require("axios");
 const fs = require("fs");
+const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
 const mock = true;
 
@@ -32,8 +33,8 @@ class Blebox extends utils.Adapter {
 		this.log.info("config user: " + this.config.user);
 		this.log.info("config pass: " + "******");
 
-		await this.initDatapoints();
 		await this.getDeviceState();
+		await this.getSettingsState();
 		await this.getUptime();
 
 		// in this template all states changes inside the adapters namespace are subscribed
@@ -120,108 +121,136 @@ class Blebox extends utils.Adapter {
 	// 	} 
 	// }
 
-	async initDatapoints() {
-		let dp = null;
-		let dp_value = null;
-		for (dp in tools.datapoints) {
-			dp_value = tools.datapoints[dp];
-			this.log.info(dp + " = " + JSON.stringify(dp_value));
-			await this.setObjectAsync(dp, {
-				type: dp_value.type,
-				common: {
-					name: dp_value.name,
-					type: dp_value.type,
-					role: dp_value.role,
-					read: dp_value.read,
-					write: dp_value.write,
-				},
-				native: {},
-			});
-
-		}
-	}
+	/**
+	 * get device state of Blebox
+	 */
 	async getDeviceState() {
-		let buf = new Buffer("");
-		let resp = "";
-		if (mock) {
-			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_state.json");
-			resp = buf.toString("UTF-8");
-		} else {
-			req("http://" + this.config.host + ":" + this.config.port + "/api/device/state", function (error, response, body) {
-				console.log("error:", error);
-				console.log("statusCode:", response && response.statusCode);
-				console.log("body:", body);
-				resp = body;
-			});
-		}
-		this.log.info("Response: " + resp);
-		const state_response = JSON.parse(resp);
-
-		let dp = null;
-		for (const attr in state_response.device) {
-			if (state_response.device.hasOwnProperty(attr)) {
-				dp = tools.getDatapoint("deviceState", attr);
-				this.log.debug(dp + " = " + state_response.device[attr]);
-				await this.setStateAsync(dp, state_response.device[attr]);
-			}
-		}
+		let states = {};
+		states = await this.getSimpleObject("deviceState");
+		await this.updateStates(states);
 	}
 
+	/**
+	 * get uptime of Blebox
+	 */
 	async getUptime() {
-		let buf = new Buffer("");
-		let resp = "";
-		if (mock) {
-			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_device_uptime.json");
-			resp = buf.toString("UTF-8");
-		} else {
-			req("http://" + this.config.host + ":" + this.config.port + "/api/device/uptime", function (error, response, body) {
-				console.log("error:", error);
-				console.log("statusCode:", response && response.statusCode);
-				console.log("body:", body);
-				resp = body;
-			});
-		}
-		this.log.info("Response: " + resp);
-		const response = JSON.parse(resp);
-
-		let dp = null;
-		for (const attr in response) {
-			if (response.hasOwnProperty(attr)) {
-				dp = tools.getDatapoint("deviceUptime", attr);
-				this.log.debug(dp + " = " + response[attr]);
-				await this.setStateAsync(dp, response[attr]);
-			}
-		}
-
+		let states = {};
+		states = await this.getSimpleObject("deviceUptime");
+		await this.updateStates(states);
 	}
 
-	async getSettings() {
+	/**
+	 * get settings of Blebox
+	 */
+	async getSettingsState() {
+		let states = {};
+		states = await this.getSimpleObject("settingsState");
+		await this.updateStates(states);
+	}
+
+	/**
+	 * 
+	 * @param {string} type apiPart to GET data from
+	 */
+	async getSimpleObject(type) {
+		let states = {};
+		switch (type) {
+			case "deviceState":
+				if (mock) {
+					states = await this.simpleObjectFileGetter("/test/shutterbox/api_device_state.json");
+				} else {
+					states = this.simpleObjectUrlGetter("/api/device/state");
+				}
+				return states;
+			case "deviceUptime":
+				if (mock) {
+					states = await this.simpleObjectFileGetter("/test/shutterbox/api_device_uptime.json");
+				} else {
+					states = this.simpleObjectUrlGetter("/api/device/uptime");
+				}
+				return states;
+			case "settingsState":
+				if (mock) {
+					states = await this.simpleObjectFileGetter("/test/shutterbox/api_settings_state.json");
+				} else {
+					states = this.simpleObjectUrlGetter("/api/settings/state");
+				}
+				return states;
+
+			default:
+				return {};
+		}
+	}
+
+	/**
+	 * 
+	 * @param {string} path Path to json-File containing mock-data
+	 * 					
+	 * returns object of dotted styled keys with values e.g. device.ip = 192.168.1.2
+	 */
+	async simpleObjectFileGetter(path) {
 		let buf = new Buffer("");
 		let resp = "";
-		if (mock) {
-			buf = fs.readFileSync(__dirname + "/test/shutterbox/api_settings_state.json");
-			resp = buf.toString("UTF-8");
-		} else {
-			req("http://" + this.config.host + ":" + this.config.port + "/api/settings/state", function (error, response, body) {
-				console.log("error:", error);
-				console.log("statusCode:", response && response.statusCode);
-				console.log("body:", body);
-				resp = body;
-			});
+		buf = fs.readFileSync(__dirname + path);
+		resp = buf.toString("UTF-8");
+		const state_response = JSON.parse(resp);
+		let states = {};
+		try {
+			states = dot.dot(state_response);
+		} catch (error) {
+			this.log.error("simpleObjectFileGetter: " + error);
 		}
-		this.log.info("Response: " + resp);
-		const response = JSON.parse(resp);
+		return states;
+	}
 
-		// TODO: Parse Object
-		/*let dp = null;
-		for (const attr in response) {
-			if (response.hasOwnProperty(attr)) {
-				dp = tools.getDatapoint("settingsState", attr);
-				this.log.debug(dp + " = " + response[attr]);
-				await this.setStateAsync(dp, response[attr]);
+	/**
+	 * 
+	 * @param {string} url URL to GET data from
+	 *
+	 * returns object of dotted styled keys with values e.g. device.ip = 192.168.1.2
+	 */
+	async simpleObjectUrlGetter(url) {
+		let states = {};
+		const iob = this;
+		await axios.default.get("http://" + this.config.host + ":" + this.config.port + url)
+			.then(function (response) {
+				console.log("body:", response.data);
+				const state_response = JSON.parse(response.data);
+				try {
+					states = dot.dot(state_response);
+				} catch (error) {
+					iob.log.error("simpleObjectUrlGetter: " + error);
+				}
+				return states;
+			})
+			.then(function (error) {
+				console.log("error:", error);
+			});
+	}
+
+	/**
+	 * 
+	 * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
+	 */
+	async updateStates(states) {
+		for (const key in states) {
+			if (states.hasOwnProperty(key)) {
+				const value = states[key];
+				this.log.info("updateStates: " + key + " = " + value);
+				await this.setObjectAsync(key, {
+					type: tools.datapoints[key].type,
+					common: {
+						name: tools.datapoints[key].name,
+						type: tools.datapoints[key].type,
+						role: tools.datapoints[key].role,
+						read: tools.datapoints[key].read,
+						write: tools.datapoints[key].write,
+					},
+					native: {},
+				});
+				await this.setStateAsync(key, value);
 			}
-		}*/
-
+		}
 	}
 }
 
