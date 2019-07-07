@@ -35,14 +35,14 @@ class Blebox extends utils.Adapter {
 		this.log.info("config port: " + this.config.port);
 		this.log.info("config user: " + this.config.user);
 		this.log.info("config pass: " + "******");
-
+		this.log.info(JSON.stringify(this.namespace));
 		await this.getDeviceState();
 		await this.getSettingsState();
 		await this.getUptime();
 		await this.initCommon();
 
 		// in this template all states changes inside the adapters namespace are subscribed
-		this.subscribeStates("*");
+		this.subscribeStates("command.*");
 
 		/*
 		setState examples
@@ -98,10 +98,28 @@ class Blebox extends utils.Adapter {
 	 * @param {string} id
 	 * @param {ioBroker.State | null | undefined} state
 	 */
-	onStateChange(id, state) {
+	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			switch (id) {
+				case this.namespace + ".command.move":
+					switch (state.val) {
+						case "d":
+							this.log.info("moving down");
+							break;
+						case "u":
+							this.log.info("moving up");
+							break;
+					}
+					break;
+				case this.namespace + ".command.tilt":
+					this.log.info(`tilt: ${state.val}`);
+					break;
+				case this.namespace + ".command.favorite":
+					this.log.info(`favorite: ${state.val}`);
+					break;
+			}
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
