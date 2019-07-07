@@ -6,7 +6,8 @@ const fs = require("fs");
 const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
 //const mock = "locationMockFile"; 	// mock via filesystem
-const mock = "locationMockUrl"; 	// local mock-server https://github.com/smollweide/node-mock-server
+let mock = "";
+mock = "locationMockUrl"; 	// local mock-server https://github.com/smollweide/node-mock-server
 //const mock = "locationUrl";		// communicate with blebox
 
 class Blebox extends utils.Adapter {
@@ -38,6 +39,7 @@ class Blebox extends utils.Adapter {
 		await this.getDeviceState();
 		await this.getSettingsState();
 		await this.getUptime();
+		await this.initCommon();
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("*");
@@ -263,6 +265,15 @@ class Blebox extends utils.Adapter {
 				await this.setStateAsync(key, value);
 			}
 		}
+	}
+
+	async initCommon() {
+		const states = {
+			"command.move": "",
+			"command.favorite": "",
+			"command.tilt": ""
+		};
+		await this.updateStates(states);
 	}
 }
 
