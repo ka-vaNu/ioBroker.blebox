@@ -45,9 +45,7 @@
 	},
 	"native": {
 		"host": "",
-		"port": "",
-		"user": "",
-		"pass": ""
+		"port": ""
 	},
 	"objects": [],
 	"instanceObjects": []

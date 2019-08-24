@@ -5,10 +5,6 @@ const axios = require("axios");
 const fs = require("fs");
 const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
-//const mock = "locationMockFile"; 	// mock via filesystem
-let mock = "";
-mock = "locationMockUrl"; 	// local mock-server https://github.com/smollweide/node-mock-server
-//const mock = "locationUrl";		// communicate with blebox
 
 class Blebox extends utils.Adapter {
 
@@ -33,36 +29,38 @@ class Blebox extends utils.Adapter {
 	async onReady() {
 		this.log.info("config host: " + this.config.host);
 		this.log.info("config port: " + this.config.port);
-		this.log.info("config user: " + this.config.user);
-		this.log.info("config pass: " + "******");
 		this.log.info(JSON.stringify(this.namespace));
-		await this.getDeviceState();
-		await this.getSettingsState();
-		await this.getUptime();
-		await this.initCommon();
-
+		
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates("command.*");
-
+		
 		/*
 		setState examples
 		you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
 		*/
 		// the variable testVariable is set to true as command (ack=false)
-
+		
 		// same thing, but the value is flagged "ack"
 		// ack should be always set to true if the value is received from or acknowledged from the target system
 		//await this.setStateAsync("testVariable", { val: true, ack: true });
-
+		
 		// same thing, but the state is deleted after 30s (getState will return null afterwards)
 		//await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-
+		
 		// examples for the checkPassword/checkGroup functions
 		let result = await this.checkPasswordAsync("admin", "iobroker");
 		this.log.info("check user admin pw ioboker: " + result);
-
+		
 		result = await this.checkGroupAsync("admin", "admin");
 		this.log.info("check group user admin group admin: " + result);
+		this.log.info("get Uptime");
+		this.getUptime();
+		this.log.info("init Common");
+		this.initCommon();
+		this.log.info("get Stettings State");
+		this.getSettingsState();
+		this.log.info("get Device State");
+		this.getDeviceState();
 	}
 
 	/**
@@ -107,9 +105,11 @@ class Blebox extends utils.Adapter {
 					switch (state.val) {
 						case "d":
 							this.log.info("moving down");
+							await this.getSimpleObject("sendDown");
 							break;
 						case "u":
 							this.log.info("moving up");
+							await this.getSimpleObject("sendUp");
 							break;
 					}
 					break;
@@ -150,6 +150,7 @@ class Blebox extends utils.Adapter {
 		let states = {};
 		states = await this.getSimpleObject("deviceState");
 		await this.updateStates(states);
+		return true;
 	}
 
 	/**
@@ -159,6 +160,7 @@ class Blebox extends utils.Adapter {
 		let states = {};
 		states = await this.getSimpleObject("deviceUptime");
 		await this.updateStates(states);
+		return true;
 	}
 
 	/**
@@ -168,6 +170,7 @@ class Blebox extends utils.Adapter {
 		let states = {};
 		states = await this.getSimpleObject("settingsState");
 		await this.updateStates(states);
+		return true;
 	}
 
 	/**
@@ -176,44 +179,14 @@ class Blebox extends utils.Adapter {
 	 */
 	async getSimpleObject(type) {
 		let states = {};
-		let locationMockFile = "";
-		let locationMockUrl = "";
-		let locationUrl = "";
-		this.log.info("getSimpleObject: " + type);
-		switch (type) {
-			case "deviceState":
-				locationMockFile = "/test/shutterbox/api_device_state.json";
-				locationMockUrl = "/rest/v1/api/device/state";
-				locationUrl = "/api/device/state";
-				break;
-			case "deviceUptime":
-				locationMockFile = "/test/shutterbox/api_device_uptime.json";
-				locationMockUrl = "/rest/v1/api/device/uptime";
-				locationUrl = "/api/device/uptime";
-				break;
-			case "settingsState":
-				locationMockFile = "/test/shutterbox/api_settings_state.json";
-				locationMockUrl = "/rest/v1/api/settings/state";
-				locationUrl = "/api/settings/state";
-				break;
-			default:
-				break;
-		}
-		this.log.info("getSimpleObject: locationMockFile = " + locationMockFile);
-		this.log.info("getSimpleObject: locationMockUrl = " + locationMockUrl);
-		this.log.info("getSimpleObject: locationUrl = " + locationUrl);
-		this.log.info("getSimpleObject: mock = " + mock);
-		switch (mock) {
-			case "locationMockFile":
-				states = await this.simpleObjectFileGetter(locationMockFile);
-				break;
-			case "locationMockUrl":
-				states = await this.simpleObjectUrlGetter(locationMockUrl);
-				break;
-			case "locationUrl":
-				states = await this.simpleObjectUrlGetter(locationUrl);
-				break;
-		}
+		const locationUrl = new Array();
+		locationUrl["deviceState"] = "/api/device/state";
+		locationUrl["deviceUptime"] = "/api/device/uptime";
+		locationUrl["settingsState"] = "/api/settings/state";
+		locationUrl["sendUp"] = "/s/u";
+		locationUrl["sendDown"] = "/s/d";
+		this.log.info("getSimpleObject: " + type + " URL: " + locationUrl[type]);
+		states = await this.simpleObjectUrlGetter(locationUrl[type]);
 		return states;
 	}
 
@@ -246,14 +219,16 @@ class Blebox extends utils.Adapter {
 	 */
 	async simpleObjectUrlGetter(url) {
 		let states = {};
+		let response = {};
 		const iob = this;
 		const res = "http://" + this.config.host + ":" + this.config.port + url;
 		this.log.info("URL = " + res);
-		const response = await axios.default.get(res);
+		response = await axios.default.get(res);
 		this.log.info("body:" + JSON.stringify(response.data));
 		//const state_response = JSON.parse(response.data);
 		try {
 			states = dot.dot(response.data);
+			iob.log.info("data:" + JSON.stringify(states));
 		} catch (error) {
 			iob.log.error("simpleObjectUrlGetter: " + error);
 		}
@@ -269,7 +244,7 @@ class Blebox extends utils.Adapter {
 			if (states.hasOwnProperty(key)) {
 				const value = states[key];
 				this.log.info("updateStates: " + key + " = " + value);
-				await this.setObjectAsync(key, {
+				this.setObject(key, {
 					type: tools.datapoints[key].type,
 					common: {
 						name: tools.datapoints[key].name,
@@ -280,7 +255,7 @@ class Blebox extends utils.Adapter {
 					},
 					native: {},
 				});
-				await this.setStateAsync(key, value);
+				this.setState(key, value);
 			}
 		}
 	}
