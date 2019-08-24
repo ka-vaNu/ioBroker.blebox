@@ -53,13 +53,9 @@ class Blebox extends utils.Adapter {
 		
 		result = await this.checkGroupAsync("admin", "admin");
 		this.log.info("check group user admin group admin: " + result);
-		this.log.info("get Uptime");
 		this.getUptime();
-		this.log.info("init Common");
 		this.initCommon();
-		this.log.info("get Stettings State");
 		this.getSettingsState();
-		this.log.info("get Device State");
 		this.getDeviceState();
 	}
 
