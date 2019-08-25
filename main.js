@@ -38,14 +38,16 @@ class Blebox extends utils.Adapter {
 		result = await this.checkGroupAsync("admin", "admin");
 		this.log.info("check group user admin group admin: " + result);
 
-		this.getUptime();
 		this.initCommon();
-		this.getSettingsState();
-		this.getDeviceState();
+		this.getBleboxUptime(true);
+		this.getBleboxSettingsState(true);
+		this.getBleboxDeviceState(true);
+		this.getBleboxShutterState(true);
+
 
 		const iob = this;
-		const job = schedule.scheduleJob("*/10 * * * *", function () {
-			iob.getUptime();
+		schedule.scheduleJob("*/10 * * * *", function () {
+			iob.getBleboxUptime();
 		});
 	}
 
@@ -84,6 +86,7 @@ class Blebox extends utils.Adapter {
 	 */
 	async onStateChange(id, state) {
 		if (state) {
+			let response = {};
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			switch (id) {
@@ -91,19 +94,46 @@ class Blebox extends utils.Adapter {
 					switch (state.val) {
 						case "d":
 							this.log.info("moving down");
-							await this.getSimpleObject("sendDown");
+							response = await this.getSimpleObject("sendDown", null);
+							response["command.move"] = "";
+							await this.setIobStates(response);
+							this.getBleboxShutterState();
 							break;
 						case "u":
 							this.log.info("moving up");
-							await this.getSimpleObject("sendUp");
+							response = await this.getSimpleObject("sendUp", null);
+							response["command.move"] = "";
+							await this.setIobStates(response);
+							this.getBleboxShutterState();
 							break;
 					}
 					break;
 				case this.namespace + ".command.tilt":
-					this.log.info(`tilt: ${state.val}`);
+					if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
+						this.log.info(`tilt: ${state.val}`);
+						response = await this.getSimpleObject("tilt", state.val);
+						response["command.tilt"] = "";
+						await this.setIobStates(response);
+						this.getBleboxShutterState();
+					}
 					break;
 				case this.namespace + ".command.favorite":
-					this.log.info(`favorite: ${state.val}`);
+					if ((state.val >= 1) && (state.val <= 4)) {
+						this.log.info(`favorite: ${state.val}`);
+						response = await this.getSimpleObject("favorite", state.val);
+						response["command.favorite"] = "";
+						await this.setIobStates(response);
+						this.getBleboxShutterState();
+					}
+					break;
+				case this.namespace + ".command.position":
+					if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
+						this.log.info(`position: ${state.val}`);
+						response = await this.getSimpleObject("position", state.val);
+						response["command.position"] = "";
+						await this.setIobStates(response);
+						this.getBleboxShutterState();
+					}
 					break;
 			}
 		} else {
@@ -132,20 +162,26 @@ class Blebox extends utils.Adapter {
 	/**
 	 * get device state of Blebox
 	 */
-	async getDeviceState() {
+	async getBleboxDeviceState(init) {
 		let states = {};
-		states = await this.getSimpleObject("deviceState");
-		await this.updateStates(states);
+		states = await this.getSimpleObject("deviceState", null);
+		if (init){
+			await this.initIobStates(states);
+		}
+		await this.setIobStates(states);
 		return true;
 	}
 
 	/**
 	 * get uptime of Blebox
 	 */
-	async getUptime() {
+	async getBleboxUptime(init) {
 		let states = {};
-		states = await this.getSimpleObject("deviceUptime");
-		await this.updateStates(states);
+		states = await this.getSimpleObject("deviceUptime", null);
+		if (init){
+			await this.initIobStates(states);
+		}
+		await this.setIobStates(states);
 		return true;
 	}
 
@@ -153,10 +189,26 @@ class Blebox extends utils.Adapter {
 	/**
 	 * get settings of Blebox
 	 */
-	async getSettingsState() {
+	async getBleboxSettingsState(init) {
 		let states = {};
-		states = await this.getSimpleObject("settingsState");
-		await this.updateStates(states);
+		states = await this.getSimpleObject("settingsState", null);
+		if (init){
+			await this.initIobStates(states);
+		}
+		await this.setIobStates(states);
+		return true;
+	}
+
+	/**
+	 * get shutter state of Blebox
+	 */
+	async getBleboxShutterState(init) {
+		let states = {};
+		states = await this.getSimpleObject("shutterState", null);
+		if (init){
+			await this.initIobStates(states);
+		}
+		await this.setIobStates(states);
 		return true;
 	}
 
@@ -164,7 +216,7 @@ class Blebox extends utils.Adapter {
 	 * 
 	 * @param {string} type apiPart to GET data from
 	 */
-	async getSimpleObject(type) {
+	async getSimpleObject(type, val) {
 		let states = {};
 		const locationUrl = new Array();
 		locationUrl["deviceState"] = "/api/device/state";
@@ -172,7 +224,11 @@ class Blebox extends utils.Adapter {
 		locationUrl["settingsState"] = "/api/settings/state";
 		locationUrl["sendUp"] = "/s/u";
 		locationUrl["sendDown"] = "/s/d";
-		this.log.info("getSimpleObject: " + type + " URL: " + locationUrl[type]);
+		locationUrl["favorite"] = "/s/f/" + val;
+		locationUrl["position"] = "/s/p/" + val;
+		locationUrl["tilt"] = "/s/t/" + val;
+		locationUrl["shutterState"] = "/api/shutter/state";
+		this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type]);
 		states = await this.simpleObjectUrlGetter(locationUrl[type]);
 		return states;
 	}
@@ -226,11 +282,11 @@ class Blebox extends utils.Adapter {
 	 * 
 	 * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
 	 */
-	async updateStates(states) {
+	async initIobStates(states) {
 		for (const key in states) {
 			if (states.hasOwnProperty(key)) {
 				const value = states[key];
-				this.log.info("updateStates: " + key + " = " + value);
+				this.log.info("initIobStates: " + key + " = " + value);
 				this.setObject(key, {
 					type: tools.datapoints[key].type,
 					common: {
@@ -242,6 +298,20 @@ class Blebox extends utils.Adapter {
 					},
 					native: {},
 				});
+				this.setIobStates(states);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
+	 */
+	async setIobStates(states) {
+		for (const key in states) {
+			if (states.hasOwnProperty(key)) {
+				const value = states[key];
+				this.log.info("setIobStates: " + key + " = " + value);
 				this.setState(key, value);
 			}
 		}
@@ -251,9 +321,10 @@ class Blebox extends utils.Adapter {
 		const states = {
 			"command.move": "",
 			"command.favorite": "",
+			"command.position": "",
 			"command.tilt": ""
 		};
-		await this.updateStates(states);
+		await this.initIobStates(states);
 	}
 }
 
