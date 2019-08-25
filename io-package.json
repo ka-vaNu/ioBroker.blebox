@@ -39,7 +39,9 @@
 		"materialize": true,
 		"dependencies": [
 			{
-				"js-controller": ">=1.4.2"
+				"js-controller": ">=1.4.2",
+				"axios": ">=0.19.0",
+				"dot-object": ">=1.9.0"
 			}
 		]
 	},

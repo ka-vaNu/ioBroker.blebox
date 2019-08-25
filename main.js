@@ -5,6 +5,7 @@ const axios = require("axios");
 const fs = require("fs");
 const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
+const schedule = require("node-schedule");
 
 class Blebox extends utils.Adapter {
 
@@ -29,34 +30,23 @@ class Blebox extends utils.Adapter {
 	async onReady() {
 		this.log.info("config host: " + this.config.host);
 		this.log.info("config port: " + this.config.port);
-		this.log.info(JSON.stringify(this.namespace));
-		
-		// in this template all states changes inside the adapters namespace are subscribed
+
 		this.subscribeStates("command.*");
-		
-		/*
-		setState examples
-		you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		//await this.setStateAsync("testVariable", { val: true, ack: true });
-		
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		//await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-		
-		// examples for the checkPassword/checkGroup functions
+
 		let result = await this.checkPasswordAsync("admin", "iobroker");
 		this.log.info("check user admin pw ioboker: " + result);
-		
 		result = await this.checkGroupAsync("admin", "admin");
 		this.log.info("check group user admin group admin: " + result);
+
 		this.getUptime();
 		this.initCommon();
 		this.getSettingsState();
 		this.getDeviceState();
+
+		const iob = this;
+		const job = schedule.scheduleJob("*/10 * * * *", function () {
+			iob.getUptime();
+		});
 	}
 
 	/**
@@ -158,6 +148,7 @@ class Blebox extends utils.Adapter {
 		await this.updateStates(states);
 		return true;
 	}
+
 
 	/**
 	 * get settings of Blebox
