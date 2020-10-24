@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use strict";
 
 const utils = require("@iobroker/adapter-core");
@@ -275,7 +276,7 @@ class Blebox extends utils.Adapter {
 	 */
     async initIobStates(states) {
         for (const key in states) {
-            if (states.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(states,"key")) {
                 const value = states[key];
                 this.log.info("initIobStates: " + JSON.stringify(key) + " = " + JSON.stringify(value));
                 this.setObject(key, {
@@ -299,7 +300,7 @@ class Blebox extends utils.Adapter {
 	 */
     async setIobStates(states) {
         for (const key in states) {
-            if (states.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(states,"key")) {
                 const value = states[key];
                 this.log.info("setIobStates: " + JSON.stringify(key) + " = " + JSON.stringify(value));
                 this.setState(key, value);
