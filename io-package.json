@@ -1,12 +1,12 @@
 {
 	"common": {
 		"name": "blebox",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung"
-			}
+			"0.0.2": {
+				"en": "",
+				"de": "Verbesserung des Statushandlings"
+            }            
 		},
 		"title": "Blebox",
 		"titleLang": {
