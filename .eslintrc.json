@@ -6,9 +6,6 @@
 	},
 	"extends": "eslint:recommended",
 	"rules": {
-		"indent": [
-			"error", 4
-		],
 		"no-console": "off",
 		"no-var": "error",
 		"prefer-const": "error",
