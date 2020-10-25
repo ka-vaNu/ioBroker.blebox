@@ -3,9 +3,9 @@
 		"name": "blebox",
 		"version": "0.0.2",
 		"news": {
-			"0.0.2": {
+			"0.0.3": {
 				"en": "",
-				"de": "Verbesserung des Statushandlings"
+				"de": "Mehrere Devices in einer Instanz"
             }            
 		},
 		"title": "Blebox",
@@ -43,9 +43,7 @@
 		]
 	},
 	"native": {
-		"type": "",
-		"host": "",
-		"port": ""
+		"devices": []
 	},
 	"objects": [],
 	"instanceObjects": []

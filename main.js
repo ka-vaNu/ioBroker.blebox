@@ -3,12 +3,12 @@
 
 const utils = require("@iobroker/adapter-core");
 const axios = require("axios");
-const fs = require("fs");
 const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
 const schedule = require("node-schedule");
 const shutterbox = require("./lib/shutterbox");
 
+// eslint-disable-next-line prefer-const
 let datapoints = {};
 
 class Blebox extends utils.Adapter {
@@ -32,35 +32,38 @@ class Blebox extends utils.Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        this.log.info("config type: " + this.config.type);
-        this.log.info("config host: " + this.config.host);
-        this.log.info("config port: " + this.config.port);
-
-        this.subscribeStates("command.*");
-
+        this.log.info("Full config: " + JSON.stringify(this.config));
         let result = await this.checkPasswordAsync("admin", "iobroker");
         this.log.info("check user admin pw ioboker: " + result);
         result = await this.checkGroupAsync("admin", "admin");
         this.log.info("check group user admin group admin: " + result);
+        if (Object.prototype.hasOwnProperty.call(this.config, "devices")) {
+            this.config.devices.forEach(device => {
+                this.log.info("device name: " + device.name);
+                this.log.info("device smart_name: " + device.smart_name);
+                this.log.info("device type: " + device.type);
+                this.log.info("device ip: " + device.ip);
+                this.log.info("device port: " + device.port);
+                this.initCommon(device.name, device.type);
+                switch (device.type) {
+                    case "shutterbox":
+                        shutterbox.init();
+                        this.getBleboxData(device, "deviceUptime");
+                        this.getBleboxData(device, "settingsState");
+                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "shutterState");
+                        break;
 
-        this.initCommon(this.config.type);
-        switch (this.config.type) {
-            case "shutterbox":
-                this.getBleboxData("deviceUptime");
-                this.getBleboxData("settingsState");
-                this.getBleboxData("deviceState");
-                this.getBleboxData("shutterState");
-                break;
-
-            default:
-                break;
+                    default:
+                        break;
+                }
+                const iob = this;
+                schedule.scheduleJob("*/10 * * * *", function () {
+                    iob.getBleboxUptime();
+                });
+                this.subscribeStates(device.name + ".command.*");
+            });
         }
-
-
-        const iob = this;
-        schedule.scheduleJob("*/10 * * * *", function () {
-            iob.getBleboxUptime();
-        });
     }
 
     /**
@@ -92,61 +95,85 @@ class Blebox extends utils.Adapter {
     }
 
     /**
+     * 
+     * @param {string} name : Name of device as defined in Config
+     */
+    getDeviceByName(name) {
+        let ret = {};
+        this.log.info("getDeviceByName # name : " + JSON.stringify(name) );
+        this.config.devices.forEach(device => {
+            this.log.info("getDeviceByName # device : " + JSON.stringify(device) );
+            if (device.name == name) {
+                this.log.info("getDeviceByName # return device : " + JSON.stringify(device) );
+                ret = device;
+            }
+        });
+        return ret;
+    }
+
+    /**
      * Is called if a subscribed state changes
      * @param {string} id
      * @param {ioBroker.State | null | undefined} state
      */
     async onStateChange(id, state) {
+        const name = id.split(".")[2];
+        const device = this.getDeviceByName(name);
+        const l_datapoint = datapoints[name];
+        this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
+        this.log.info("datapoint : " + JSON.stringify(l_datapoint));
+        this.log.info("device : " + JSON.stringify(device));
         if (state) {
             let response = {};
             // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
             switch (id) {
-                case this.namespace + ".command.move":
+                case this.namespace + "." + name + ".command.move":
                     switch (state.val) {
                         case "d":
                             this.log.info("moving down");
-                            response = await this.getSimpleObject("sendDown", null);
+                            response = await this.getSimpleObject(device, "sendDown", null);
                             response["command.move"] = "";
                             await this.setIobStates(response);
-                            this.getBleboxShutterState();
+                            this.getBleboxData(device, "shutterState");
                             break;
                         case "u":
                             this.log.info("moving up");
-                            response = await this.getSimpleObject("sendUp", null);
+                            response = await this.getSimpleObject(device, "sendUp", null);
                             response["command.move"] = "";
                             await this.setIobStates(response);
-                            this.getBleboxShutterState();
+                            this.getBleboxData(device, "shutterState");
                             break;
                     }
                     break;
-                case this.namespace + ".command.tilt":
+                case this.namespace + "." + name + ".command.tilt":
                     if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
                         this.log.info(`tilt: ${state.val}`);
-                        response = await this.getSimpleObject("tilt", state.val);
+                        response = await this.getSimpleObject(device, "tilt", state.val);
                         response["command.tilt"] = "";
                         await this.setIobStates(response);
-                        this.getBleboxShutterState();
+                        this.getBleboxData(device, "shutterState");
                     }
                     break;
-                case this.namespace + ".command.favorite":
+                case this.namespace + "." + name + ".command.favorite":
                     if ((state.val >= 1) && (state.val <= 4)) {
                         this.log.info(`favorite: ${state.val}`);
-                        response = await this.getSimpleObject("favorite", state.val);
+                        response = await this.getSimpleObject(device, "favorite", state.val);
                         response["command.favorite"] = "";
                         await this.setIobStates(response);
-                        this.getBleboxShutterState();
+                        this.getBleboxData(device, "shutterState");
                     }
                     break;
-                case this.namespace + ".command.position":
+                case this.namespace + "." + name + ".command.position":
                     if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
                         this.log.info(`position: ${state.val}`);
-                        response = await this.getSimpleObject("position", state.val);
+                        response = await this.getSimpleObject(device, "position", state.val);
                         response["command.position"] = "";
                         await this.setIobStates(response);
-                        this.getBleboxShutterState();
+                        this.getBleboxData(device, "shutterState");
                     }
                     break;
+                default:
+                    this.log.error(`state ${id} not processed`);
             }
         } else {
             // The state was deleted
@@ -175,10 +202,11 @@ class Blebox extends utils.Adapter {
     /**
     * get Data of Blebox
     */
-    async getBleboxData(type) {
+    async getBleboxData(device, type) {
         let states = {};
-        states = await this.getSimpleObject(type, null);
-        await this.setIobStates(states);
+        this.log.info("getBleboxData : device : " + JSON.stringify(device) + " type: " + type);
+        states = await this.getSimpleObject(device, type, null);
+        await this.setIobStates(device, states);
         return true;
     }
 
@@ -186,7 +214,7 @@ class Blebox extends utils.Adapter {
      * 
      * @param {string} type apiPart to GET data from
      */
-    async getSimpleObject(type, val) {
+    async getSimpleObject(device, type, val) {
         let states = {};
         const locationUrl = new Array();
         locationUrl["deviceState"] = "/api/device/state";
@@ -198,29 +226,8 @@ class Blebox extends utils.Adapter {
         locationUrl["position"] = "/s/p/" + val;
         locationUrl["tilt"] = "/s/t/" + val;
         locationUrl["shutterState"] = "/api/shutter/state";
-        this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type]);
-        states = await this.simpleObjectUrlGetter(locationUrl[type]);
-        return states;
-    }
-
-    /**
-     * 
-     * @param {string} path Path to json-File containing mock-data
-     * 					
-     * returns object of dotted styled keys with values e.g. device.ip = 192.168.1.2
-     */
-    async simpleObjectFileGetter(path) {
-        let buf = new Buffer("");
-        let resp = "";
-        buf = fs.readFileSync(__dirname + path);
-        resp = buf.toString("utf8");
-        const state_response = JSON.parse(resp);
-        let states = {};
-        try {
-            states = dot.dot(state_response);
-        } catch (error) {
-            this.log.error("simpleObjectFileGetter: " + error);
-        }
+        this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type] + " device: " + JSON.stringify(device));
+        states = await this.simpleObjectUrlGetter(device, locationUrl[type]);
         return states;
     }
 
@@ -230,11 +237,11 @@ class Blebox extends utils.Adapter {
      *
      * returns object of dotted styled keys with values e.g. device.ip = 192.168.1.2
      */
-    async simpleObjectUrlGetter(url) {
+    async simpleObjectUrlGetter(device, url) {
         let states = {};
         let response = {};
         const iob = this;
-        const res = "http://" + this.config.host + ":" + this.config.port + url;
+        const res = "http://" + device.ip + ":" + device.port + url;
         this.log.info("URL = " + res);
         response = await axios.default.get(res);
         this.log.info("body:" + JSON.stringify(response.data));
@@ -252,12 +259,15 @@ class Blebox extends utils.Adapter {
      * 
      * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
      */
-    async initIobStates(states) {
-        for (const key in states) {
-            if (Object.prototype.hasOwnProperty.call(states, "key")) {
-                const value = states[key];
-                this.log.info("initIobStates: " + JSON.stringify(key) + " = " + JSON.stringify(value));
-                this.setObject(key, {
+    async initIobStates(name, datapoints) {
+        this.log.info("initIobStates start: " + JSON.stringify(name) + " = " + JSON.stringify(datapoints));
+        for (const key in datapoints) {
+            this.log.info("initIobStates key: " + JSON.stringify(key));
+            if (Object.prototype.hasOwnProperty.call(datapoints, key)) {
+                const path = name + "." + key;
+                const value = datapoints[key];
+                this.log.info("initIobStates: " + JSON.stringify(path) + " = " + JSON.stringify(value));
+                this.setObject(path, {
                     type: datapoints[key].type,
                     common: {
                         name: datapoints[key].common.name,
@@ -276,19 +286,22 @@ class Blebox extends utils.Adapter {
      * 
      * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
      */
-    async setIobStates(states) {
-        for (const key in states) {
-            if (Object.prototype.hasOwnProperty.call(states, "key")) {
-                const value = states[key];
-                this.log.info("setIobStates: " + JSON.stringify(key) + " = " + JSON.stringify(value));
-                this.setState(key, value);
+    async setIobStates(device, datapoints) {
+        this.log.info("setIobStates Start: " + JSON.stringify(device) + " = " + JSON.stringify(datapoints));
+        for (const key in datapoints) {
+            if (Object.prototype.hasOwnProperty.call(datapoints, key)) {
+                const value = datapoints[key];
+                this.log.info("setIobStates: " + JSON.stringify(device.name + "." + key) + " = " + JSON.stringify(value));
+                this.setState(device.name + "." + key, value);
             }
         }
     }
 
-    async initCommon(typ) {
-        datapoints = tools.getDatapoints(typ);
-        await this.initIobStates(datapoints);
+    async initCommon(name, type) {
+        this.log.info("initCommon: name: " + name + " type: " + type);
+        datapoints[name] = tools.getDatapoints(type);
+        this.log.info("initCommon: datapoints: " + JSON.stringify(datapoints[name]));
+        await this.initIobStates(name, datapoints[name]);
     }
 }
 
