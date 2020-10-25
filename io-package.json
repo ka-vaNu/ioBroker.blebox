@@ -6,7 +6,15 @@
 			"0.0.3": {
 				"en": "",
 				"de": "Mehrere Devices in einer Instanz"
-            }            
+            },
+            "0.0.2": {
+				"en": "",
+				"de": "Verbesserung des Statushandlings"
+            },
+            "0.0.1": {
+				"en": "",
+				"de": "Initial Release"
+            }              
 		},
 		"title": "Blebox",
 		"titleLang": {

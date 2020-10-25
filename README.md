@@ -80,6 +80,12 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.3
+* (Kai van Nuis) Mehrere Devices in einer Instanz
+
+### 0.0.2
+* (Kai van Nuis) Verbesserung des Statushandlings
+
 ### 0.0.1
 * (Kai van Nuis) initial release
 
@@ -105,3 +111,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Copyright (c) 2020 Kai van Nuis <kai@vannuis.de>
