@@ -92,7 +92,7 @@ For later updates, the above procedure is not necessary. Just do the following:
 ## License
 MIT License
 
-Copyright (c) 2019 Kai van Nuis
+Copyright (c) 2020 Kai van Nuis <kai@vannuis.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -111,5 +111,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-Copyright (c) 2020 Kai van Nuis <kai@vannuis.de>
