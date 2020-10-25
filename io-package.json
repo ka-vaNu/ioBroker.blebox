@@ -1,58 +1,59 @@
 {
-	"common": {
-		"name": "blebox",
-		"version": "0.0.3",
-		"news": {
-			"0.0.3": {
-				"en": "",
-				"de": "Mehrere Devices in einer Instanz"
+    "common": {
+        "name": "blebox",
+        "version": "0.0.3",
+        "news": {
+            "0.0.3": {
+                "en": "",
+                "de": "Mehrere Devices in einer Instanz"
             },
             "0.0.2": {
-				"en": "",
-				"de": "Verbesserung des Statushandlings"
+                "en": "",
+                "de": "Verbesserung des Statushandlings"
             },
             "0.0.1": {
-				"en": "",
-				"de": "Initial Release"
-            }              
-		},
-		"title": "Blebox",
-		"titleLang": {
-			"en": "Blebox",
-			"de": "Blebox"
-		},
-		"desc": {
-			"en": "Adapter für Bleboxsysteme",
-			"de": "Adapter für Bleboxsysteme"
-		},
-		"authors": [
-			"Kai van Nuis <kai@vannuis.de>"
-		],
-		"keywords": [
-			"blebox",
-			"smart home",
-			"iobroker"
-		],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "blebox.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/ka-vaNu/ioBroker.blebox/master/admin/blebox.png",
-		"readme": "https://github.com/ka-vaNu/ioBroker.blebox/blob/master/README.md",
-		"loglevel": "info",
-		"mode": "daemon",
-		"type": "iot-systems",
-		"compact": true,
-		"materialize": true,
-		"dependencies": [
-			{
-				"js-controller": ">=1.4.2"			}
-		]
-	},
-	"native": {
-		"devices": []
-	},
-	"objects": [],
-	"instanceObjects": []
+                "en": "",
+                "de": "Initial Release"
+            }
+        },
+        "title": "Blebox",
+        "titleLang": {
+            "en": "Blebox",
+            "de": "Blebox"
+        },
+        "desc": {
+            "en": "Adapter für Bleboxsysteme",
+            "de": "Adapter für Bleboxsysteme"
+        },
+        "authors": [
+            "Kai van Nuis <kai@vannuis.de>"
+        ],
+        "keywords": [
+            "blebox",
+            "smart home",
+            "iobroker"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "blebox.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/ka-vaNu/ioBroker.blebox/master/admin/blebox.png",
+        "readme": "https://github.com/ka-vaNu/ioBroker.blebox/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "iot-systems",
+        "compact": true,
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "devices": []
+    },
+    "objects": [],
+    "instanceObjects": []
 }
