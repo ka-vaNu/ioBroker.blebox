@@ -51,14 +51,14 @@ class Blebox extends utils.Adapter {
                         shutterbox.init();
                         this.getBleboxData(device, "deviceUptime");
                         this.getBleboxData(device, "settingsState");
-                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "shutterDeviceState");
                         this.getBleboxData(device, "shutterState");
                         break;
                     case "switchbox":
                         switchbox.init();
                         this.getBleboxData(device, "deviceUptime");
                         this.getBleboxData(device, "settingsState");
-                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "switchDeviceState");
                         this.getBleboxData(device, "switchState");
                         this.getBleboxData(device, "switchExtendedState");
                         break;
@@ -259,7 +259,8 @@ class Blebox extends utils.Adapter {
     async getSimpleObject(device, type, val) {
         let states = {};
         const locationUrl = new Array();
-        locationUrl["deviceState"] = "/info";
+        locationUrl["shutterDeviceState"] = "/api/device/state";
+        locationUrl["switchDeviceState"] = "/info";
         locationUrl["deviceUptime"] = "/api/device/uptime";
         locationUrl["settingsState"] = "/api/settings/state";
         locationUrl["shutterSendUp"] = "/s/u";
