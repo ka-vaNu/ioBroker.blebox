@@ -7,6 +7,7 @@ const dot = require("dot-object");
 const tools = require(__dirname + "/lib/tools");
 const schedule = require("node-schedule");
 const shutterbox = require("./lib/shutterbox");
+const switchbox = require("./lib/switchbox");
 
 // eslint-disable-next-line prefer-const
 let datapoints = {};
@@ -53,13 +54,21 @@ class Blebox extends utils.Adapter {
                         this.getBleboxData(device, "deviceState");
                         this.getBleboxData(device, "shutterState");
                         break;
+                    case "switchbox":
+                        switchbox.init();
+                        this.getBleboxData(device, "deviceUptime");
+                        this.getBleboxData(device, "settingsState");
+                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "switchState");
+                        this.getBleboxData(device, "switchExtendedState");
+                        break;
 
                     default:
                         break;
                 }
                 const iob = this;
                 schedule.scheduleJob("*/10 * * * *", function () {
-                    iob.getBleboxUptime();
+                    iob.getBleboxData(device, "deviceUptime");
                 });
                 this.subscribeStates(device.name + ".command.*");
             });
@@ -100,11 +109,11 @@ class Blebox extends utils.Adapter {
      */
     getDeviceByName(name) {
         let ret = {};
-        this.log.info("getDeviceByName # name : " + JSON.stringify(name) );
+        this.log.info("getDeviceByName # name : " + JSON.stringify(name));
         this.config.devices.forEach(device => {
-            this.log.info("getDeviceByName # device : " + JSON.stringify(device) );
+            this.log.info("getDeviceByName # device : " + JSON.stringify(device));
             if (device.name == name) {
-                this.log.info("getDeviceByName # return device : " + JSON.stringify(device) );
+                this.log.info("getDeviceByName # return device : " + JSON.stringify(device));
                 ret = device;
             }
         });
@@ -126,54 +135,87 @@ class Blebox extends utils.Adapter {
         if (state) {
             let response = {};
             // The state was changed
-            switch (id) {
-                case this.namespace + "." + name + ".command.move":
-                    switch (state.val) {
-                        case "d":
-                            this.log.info("moving down");
-                            response = await this.getSimpleObject(device, "sendDown", null);
-                            response["command.move"] = "";
-                            await this.setIobStates(response);
-                            this.getBleboxData(device, "shutterState");
+            switch (device.type) {
+                case "shutterbox":
+                    switch (id) {
+                        case this.namespace + "." + name + ".command.move":
+                            switch (state.val) {
+                                case "d":
+                                    this.log.info("moving down");
+                                    response = await this.getSimpleObject(device, "shutterSendDown", null);
+                                    response["command.move"] = "";
+                                    await this.setIobStates(response);
+                                    this.getBleboxData(device, "shutterState");
+                                    break;
+                                case "u":
+                                    this.log.info("moving up");
+                                    response = await this.getSimpleObject(device, "shutterSendUp", null);
+                                    response["command.move"] = "";
+                                    await this.setIobStates(response);
+                                    this.getBleboxData(device, "shutterState");
+                                    break;
+                                case "s":
+                                    this.log.info("moving up");
+                                    response = await this.getSimpleObject(device, "shutterSendStop", null);
+                                    response["command.move"] = "";
+                                    await this.setIobStates(response);
+                                    this.getBleboxData(device, "shutterState");
+                                    break;
+                            }
                             break;
-                        case "u":
-                            this.log.info("moving up");
-                            response = await this.getSimpleObject(device, "sendUp", null);
-                            response["command.move"] = "";
+                        case this.namespace + "." + name + ".command.tilt":
+                            if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
+                                this.log.info(`tilt: ${state.val}`);
+                                response = await this.getSimpleObject(device, "shutterTilt", state.val);
+                                response["command.tilt"] = "";
+                                await this.setIobStates(response);
+                                this.getBleboxData(device, "shutterState");
+                            }
+                            break;
+                        case this.namespace + "." + name + ".command.favorite":
+                            if ((state.val >= 1) && (state.val <= 4)) {
+                                this.log.info(`favorite: ${state.val}`);
+                                response = await this.getSimpleObject(device, "shutterFavorite", state.val);
+                                response["command.favorite"] = "";
+                                await this.setIobStates(response);
+                                this.getBleboxData(device, "shutterState");
+                            }
+                            break;
+                        case this.namespace + "." + name + ".command.position":
+                            if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
+                                this.log.info(`position: ${state.val}`);
+                                response = await this.getSimpleObject(device, "shutterPosition", state.val);
+                                response["command.position"] = "";
+                                await this.setIobStates(response);
+                                this.getBleboxData(device, "shutterState");
+                            }
+                            break;
+                        default:
+                            this.log.error(`state ${id} not processed`);
+                    }
+                    break;
+                case "switchbox":
+                    switch (id) {
+                        case this.namespace + "." + name + ".command.relay":
+                            this.log.info("set relay to " + state.val);
+                            response = await this.getSimpleObject(device, "switchSetRelay", state.val);
+                            response["command.relay"] = "";
                             await this.setIobStates(response);
-                            this.getBleboxData(device, "shutterState");
+                            this.getBleboxData(device, "switchState");
+
+                            break;
+                        case this.namespace + "." + name + ".command.setRelayForTime":
+                            this.log.info("set relay to " + state.val);
+                            response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
+                            response["command.relay"] = "";
+                            await this.setIobStates(response);
+                            this.getBleboxData(device, "switchState");
+
+                            break;
+
+                        default:
                             break;
                     }
-                    break;
-                case this.namespace + "." + name + ".command.tilt":
-                    if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
-                        this.log.info(`tilt: ${state.val}`);
-                        response = await this.getSimpleObject(device, "tilt", state.val);
-                        response["command.tilt"] = "";
-                        await this.setIobStates(response);
-                        this.getBleboxData(device, "shutterState");
-                    }
-                    break;
-                case this.namespace + "." + name + ".command.favorite":
-                    if ((state.val >= 1) && (state.val <= 4)) {
-                        this.log.info(`favorite: ${state.val}`);
-                        response = await this.getSimpleObject(device, "favorite", state.val);
-                        response["command.favorite"] = "";
-                        await this.setIobStates(response);
-                        this.getBleboxData(device, "shutterState");
-                    }
-                    break;
-                case this.namespace + "." + name + ".command.position":
-                    if ((state.val != "") && (state.val >= 0) && (state.val <= 100)) {
-                        this.log.info(`position: ${state.val}`);
-                        response = await this.getSimpleObject(device, "position", state.val);
-                        response["command.position"] = "";
-                        await this.setIobStates(response);
-                        this.getBleboxData(device, "shutterState");
-                    }
-                    break;
-                default:
-                    this.log.error(`state ${id} not processed`);
             }
         } else {
             // The state was deleted
@@ -217,15 +259,20 @@ class Blebox extends utils.Adapter {
     async getSimpleObject(device, type, val) {
         let states = {};
         const locationUrl = new Array();
-        locationUrl["deviceState"] = "/api/device/state";
+        locationUrl["deviceState"] = "/info";
         locationUrl["deviceUptime"] = "/api/device/uptime";
         locationUrl["settingsState"] = "/api/settings/state";
-        locationUrl["sendUp"] = "/s/u";
-        locationUrl["sendDown"] = "/s/d";
-        locationUrl["favorite"] = "/s/f/" + val;
-        locationUrl["position"] = "/s/p/" + val;
-        locationUrl["tilt"] = "/s/t/" + val;
+        locationUrl["shutterSendUp"] = "/s/u";
+        locationUrl["shutterendDown"] = "/s/d";
+        locationUrl["shutterendStop"] = "/s/s";
+        locationUrl["shutterFavorite"] = "/s/f/" + val;
+        locationUrl["shutterPosition"] = "/s/p/" + val;
+        locationUrl["shutterTilt"] = "/s/t/" + val;
         locationUrl["shutterState"] = "/api/shutter/state";
+        locationUrl["switchState"] = "/state";
+        locationUrl["switchExtendedState"] = "/state/extended";
+        locationUrl["switchSetRelay"] = "/s/" + val;
+        locationUrl["switchSetRelayForTime"] = "/s/1/forTime/" + val + "/ns/0";
         this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type] + " device: " + JSON.stringify(device));
         states = await this.simpleObjectUrlGetter(device, locationUrl[type]);
         return states;
