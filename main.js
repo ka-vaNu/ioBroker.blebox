@@ -205,7 +205,7 @@ class Blebox extends utils.Adapter {
 
                             break;
                         case this.namespace + "." + name + ".command.setRelayForTime":
-                            this.log.info("set relay to " + state.val);
+                            this.log.info("set relayForTime to " + state.val);
                             response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
                             response["command.relay"] = "";
                             await this.setIobStates(response);
@@ -291,10 +291,10 @@ class Blebox extends utils.Adapter {
         const iob = this;
         const res = "http://" + device.ip + ":" + device.port + url;
         this.log.info("URL = " + res);
-        response = await axios.default.get(res);
-        this.log.info("body:" + JSON.stringify(response.data));
-        //const state_response = JSON.parse(response.data);
         try {
+            response = await axios.default.get(res);
+            this.log.info("body:" + JSON.stringify(response.data));
+            //const state_response = JSON.parse(response.data);
             states = dot.dot(response.data);
             iob.log.info("data:" + JSON.stringify(states));
         } catch (error) {
