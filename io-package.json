@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.7",
+        "version": "0.0.8",
         "news": {
+            "0.0.8": {
+                "en": "",
+                "de": "Erstellung der Datenpunkte der switchbox gefixt"
+            },
             "0.0.7": {
                 "en": "",
                 "de": "Datenpunkte der switchbox verbessert"
