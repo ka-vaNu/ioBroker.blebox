@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.10",
+        "version": "0.0.11",
         "news": {
+            "0.0.11": {
+                "en": "",
+                "de": "ShutterDown und ShutterStop gefixt und setRelayForTime nach Ausführung geleert"
+            },
             "0.0.10": {
                 "en": "",
                 "de": "Exception bei HTTP-Requests fangen"
