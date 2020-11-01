@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.5",
+        "version": "0.0.6",
         "news": {
+            "0.0.6": {
+                "en": "",
+                "de": "Version nochmal korrigiert"
+            },
             "0.0.5": {
                 "en": "",
                 "de": "Version korrigiert"
