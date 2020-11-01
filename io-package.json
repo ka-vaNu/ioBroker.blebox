@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.6",
+        "version": "0.0.7",
         "news": {
+            "0.0.7": {
+                "en": "",
+                "de": "Datenpunkte der switchbox verbessert"
+            },
             "0.0.6": {
                 "en": "",
                 "de": "Version nochmal korrigiert"
