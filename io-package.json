@@ -3,6 +3,10 @@
         "name": "blebox",
         "version": "0.0.4",
         "news": {
+            "0.0.5": {
+                "en": "",
+                "de": "Version korrigiert"
+            },
             "0.0.4": {
                 "en": "",
                 "de": "Ergänzung um switchbox"
