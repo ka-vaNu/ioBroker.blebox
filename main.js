@@ -8,6 +8,7 @@ const tools = require(__dirname + "/lib/tools");
 const schedule = require("node-schedule");
 const shutterbox = require("./lib/shutterbox");
 const switchbox = require("./lib/switchbox");
+const tempsensor = require("./lib/tempsensor");
 
 // eslint-disable-next-line prefer-const
 let datapoints = {};
@@ -33,6 +34,7 @@ class Blebox extends utils.Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
+        const iob = this;
         this.log.info("Full config: " + JSON.stringify(this.config));
         let result = await this.checkPasswordAsync("admin", "iobroker");
         this.log.info("check user admin pw ioboker: " + result);
@@ -46,31 +48,41 @@ class Blebox extends utils.Adapter {
                 this.log.info("device ip: " + device.ip);
                 this.log.info("device port: " + device.port);
                 this.initCommon(device.name, device.type);
+                this.getBleboxData(device, "deviceUptime");
                 switch (device.type) {
                     case "shutterbox":
                         shutterbox.init();
-                        this.getBleboxData(device, "deviceUptime");
                         this.getBleboxData(device, "settingsState");
-                        this.getBleboxData(device, "shutterDeviceState");
+                        this.getBleboxData(device, "deviceState");
                         this.getBleboxData(device, "shutterState");
+                        schedule.scheduleJob("*/10 * * * *", function () {
+                            iob.getBleboxData(device, "deviceUptime");
+                        });
+                        this.subscribeStates(device.name + ".command.*");
                         break;
                     case "switchbox":
                         switchbox.init();
-                        this.getBleboxData(device, "deviceUptime");
                         this.getBleboxData(device, "settingsState");
-                        this.getBleboxData(device, "switchDeviceState");
+                        this.getBleboxData(device, "deviceState");
                         this.getBleboxData(device, "switchState");
                         this.getBleboxData(device, "switchExtendedState");
+                        schedule.scheduleJob("*/10 * * * *", function () {
+                            iob.getBleboxData(device, "deviceUptime");
+                        });
+                        this.subscribeStates(device.name + ".command.*");
                         break;
-
+                    case "tempsensor":
+                        tempsensor.init();
+                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "tempsensorExtendedState");
+                        schedule.scheduleJob("*/10 * * * * *", function () {
+                            iob.getBleboxData(device, "tempsensorExtendedState");
+                            iob.getBleboxData(device, "deviceUptime");
+                        });
+                        break;
                     default:
                         break;
                 }
-                const iob = this;
-                schedule.scheduleJob("*/10 * * * *", function () {
-                    iob.getBleboxData(device, "deviceUptime");
-                });
-                this.subscribeStates(device.name + ".command.*");
             });
         }
     }
@@ -216,6 +228,7 @@ class Blebox extends utils.Adapter {
                         default:
                             break;
                     }
+                    break;
             }
         } else {
             // The state was deleted
@@ -245,10 +258,10 @@ class Blebox extends utils.Adapter {
     * get Data of Blebox
     */
     async getBleboxData(device, type) {
-        let states = {};
+        let values = {};
         this.log.info("getBleboxData : device : " + JSON.stringify(device) + " type: " + type);
-        states = await this.getSimpleObject(device, type, null);
-        await this.setIobStates(device, states);
+        values = await this.getSimpleObject(device, type, null);
+        await this.setIobStates(device, values);
         return true;
     }
 
@@ -257,10 +270,10 @@ class Blebox extends utils.Adapter {
      * @param {string} type apiPart to GET data from
      */
     async getSimpleObject(device, type, val) {
-        let states = {};
+        let values = {};
         const locationUrl = new Array();
-        locationUrl["shutterDeviceState"] = "/api/device/state";
-        locationUrl["switchDeviceState"] = "/info";
+        // General
+        locationUrl["deviceState"] = "/api/device/state";
         locationUrl["deviceUptime"] = "/api/device/uptime";
         locationUrl["settingsState"] = "/api/settings/state";
         locationUrl["shutterSendUp"] = "/s/u";
@@ -271,12 +284,13 @@ class Blebox extends utils.Adapter {
         locationUrl["shutterTilt"] = "/s/t/" + val;
         locationUrl["shutterState"] = "/api/shutter/state";
         locationUrl["switchState"] = "/state";
-        locationUrl["switchExtendedState"] = "/state/extended";
         locationUrl["switchSetRelay"] = "/s/" + val;
         locationUrl["switchSetRelayForTime"] = "/s/1/forTime/" + val + "/ns/0";
+        locationUrl["switchExtendedState"] = "/state/extended";
+        locationUrl["tempsensorExtendedState"] = "/api/tempsensor/state";
         this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type] + " device: " + JSON.stringify(device));
-        states = await this.simpleObjectUrlGetter(device, locationUrl[type]);
-        return states;
+        values = await this.simpleObjectUrlGetter(device, locationUrl[type]);
+        return values;
     }
 
     /**
@@ -312,7 +326,7 @@ class Blebox extends utils.Adapter {
         for (const key in datapoints) {
             this.log.info("initIobStates key: " + JSON.stringify(key));
             if (Object.prototype.hasOwnProperty.call(datapoints, key)) {
-                const path = name + "." + key;
+                const path = name + "." + datapoints[key].path;
                 const value = datapoints[key];
                 this.log.info("initIobStates: " + JSON.stringify(path) + " = " + JSON.stringify(value));
                 this.setObject(path, {
@@ -334,13 +348,21 @@ class Blebox extends utils.Adapter {
      * 
      * @param {object} states object of dotted styled keys with values e.g. device.ip = 192.168.1.2
      */
-    async setIobStates(device, datapoints) {
-        this.log.info("setIobStates Start: " + JSON.stringify(device) + " = " + JSON.stringify(datapoints));
-        for (const key in datapoints) {
-            if (Object.prototype.hasOwnProperty.call(datapoints, key)) {
-                const value = datapoints[key];
-                this.log.info("setIobStates: " + JSON.stringify(device.name + "." + key) + " = " + JSON.stringify(value));
-                this.setState(device.name + "." + key, value);
+    async setIobStates(device, values) {
+        this.log.info("setIobStates device: " + JSON.stringify(device));
+        this.log.info("setIobStates values: " + JSON.stringify(values));
+        for (const key in values) {
+            this.log.info("setIobStates key: " + key);
+            this.log.info("setIobStates datapoints: " + JSON.stringify(datapoints[device.name]));
+            if (Object.prototype.hasOwnProperty.call(datapoints[device.name], key)) {
+                const deviceDatapoints = datapoints[device.name];
+                const path = deviceDatapoints[key].path;
+                this.log.info("setIobStates path: " + path);
+                const value = values[key];
+                this.log.info("setIobStates: " + JSON.stringify(device.name + "." + path) + " = " + JSON.stringify(value));
+                if (path) {
+                    this.setState(device.name + "." + path, value);
+                }
             }
         }
     }

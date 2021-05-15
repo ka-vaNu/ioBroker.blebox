@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.11",
+        "version": "0.0.12",
         "news": {
+            "0.0.12": {
+                "en": "",
+                "de": "tempSensor hinzugefügt, refactoring von Arrays in den Responses, Pfad für Werte kann jetzt explizit festgelegt werden"
+            },
             "0.0.11": {
                 "en": "",
                 "de": "ShutterDown und ShutterStop gefixt und setRelayForTime nach Ausführung geleert"
