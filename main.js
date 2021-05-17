@@ -9,6 +9,7 @@ const schedule = require("node-schedule");
 const shutterbox = require("./lib/shutterbox");
 const switchbox = require("./lib/switchbox");
 const tempsensor = require("./lib/tempsensor");
+const saunabox = require("./lib/saunabox");
 
 // eslint-disable-next-line prefer-const
 let datapoints = {};
@@ -77,6 +78,16 @@ class Blebox extends utils.Adapter {
                         this.getBleboxData(device, "tempsensorExtendedState");
                         schedule.scheduleJob("*/10 * * * * *", function () {
                             iob.getBleboxData(device, "tempsensorExtendedState");
+                            iob.getBleboxData(device, "deviceUptime");
+                        });
+                        break;
+                    case "saunabox":
+                        saunabox.init();
+                        this.getBleboxData(device, "deviceState");
+                        this.getBleboxData(device, "saunaboxExtendedState");
+                        this.subscribeStates(device.name + ".command.*");
+                        schedule.scheduleJob("*/30 * * * * *", function () {
+                            iob.getBleboxData(device, "saunaboxExtendedState");
                             iob.getBleboxData(device, "deviceUptime");
                         });
                         break;
@@ -216,19 +227,39 @@ class Blebox extends utils.Adapter {
                             this.getBleboxData(device, "switchState");
 
                             break;
-                        case this.namespace + "." + name + ".command.setRelayForTime":
-                            this.log.info("set relayForTime to " + state.val);
-                            response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
-                            response["command.setRelayForTime"] = "";
-                            await this.setIobStates(response);
-                            this.getBleboxData(device, "switchState");
+                            case this.namespace + "." + name + ".command.setRelayForTime":
+                                this.log.info("set relayForTime to " + state.val);
+                                response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
+                                response["command.setRelayForTime"] = "";
+                                await this.setIobStates(response);
+                                this.getBleboxData(device, "switchState");
+    
+                                break;
 
-                            break;
-
-                        default:
+                                default:
                             break;
                     }
                     break;
+                case "saunabox":
+                    switch (id) {
+                        case this.namespace + "." + name + ".command.state":
+                            this.log.info("set heat to " + state.val);
+                            response = await this.getSimpleObject(device, "saunaboxSetHeat", state.val);
+                            response["command.state"] = "";
+                            await this.setIobStates(response);
+                            this.getBleboxData(device, "saunaboxExtendedState");
+
+                            break;
+                        case this.namespace + "." + name + ".command.desiredTemp":
+                            this.log.info("set relayForTime to " + state.val);
+                            response = await this.getSimpleObject(device, "switchSetdesiredTemp", state.val);
+                            response["command.desiredTemp"] = "";
+                            await this.setIobStates(response);
+                            this.getBleboxData(device, "saunaboxExtendedState");
+
+                            break;
+
+                    }
             }
         } else {
             // The state was deleted
@@ -288,6 +319,9 @@ class Blebox extends utils.Adapter {
         locationUrl["switchSetRelayForTime"] = "/s/1/forTime/" + val + "/ns/0";
         locationUrl["switchExtendedState"] = "/state/extended";
         locationUrl["tempsensorExtendedState"] = "/api/tempsensor/state";
+        locationUrl["saunaboxExtendedState"] = "/api/heat/extended/state";
+        locationUrl["saunaboxSetHeat"] = "/s/" + val;
+        locationUrl["switchSetdesiredTemp"] = "/s/t/" + val;
         this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type] + " device: " + JSON.stringify(device));
         values = await this.simpleObjectUrlGetter(device, locationUrl[type]);
         return values;

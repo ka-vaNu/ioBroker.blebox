@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.12",
+        "version": "0.0.13",
         "news": {
+            "0.0.13": {
+                "en": "",
+                "de": "saunabox hinzugefügt"
+            },
             "0.0.12": {
                 "en": "",
                 "de": "tempSensor hinzugefügt, refactoring von Arrays in den Responses, Pfad für Werte kann jetzt explizit festgelegt werden"
