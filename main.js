@@ -227,16 +227,16 @@ class Blebox extends utils.Adapter {
                             this.getBleboxData(device, "switchState");
 
                             break;
-                            case this.namespace + "." + name + ".command.setRelayForTime":
-                                this.log.info("set relayForTime to " + state.val);
-                                response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
-                                response["command.setRelayForTime"] = "";
-                                await this.setIobStates(response);
-                                this.getBleboxData(device, "switchState");
-    
-                                break;
+                        case this.namespace + "." + name + ".command.setRelayForTime":
+                            this.log.info("set relayForTime to " + state.val);
+                            response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
+                            response["command.setRelayForTime"] = "";
+                            await this.setIobStates(response);
+                            this.getBleboxData(device, "switchState");
 
-                                default:
+                            break;
+
+                        default:
                             break;
                     }
                     break;
@@ -252,7 +252,7 @@ class Blebox extends utils.Adapter {
                             break;
                         case this.namespace + "." + name + ".command.desiredTemp":
                             this.log.info("set relayForTime to " + state.val);
-                            response = await this.getSimpleObject(device, "saunaboxSetdesiredTemp", state.val);
+                            response = await this.getSimpleObject(device, "saunaboxSetdesiredTemp", state.val * 100);
                             response["command.desiredTemp"] = "";
                             await this.setIobStates(response);
                             this.getBleboxData(device, "saunaboxExtendedState");
@@ -361,17 +361,11 @@ class Blebox extends utils.Adapter {
             this.log.info("initIobStates key: " + JSON.stringify(key));
             if (Object.prototype.hasOwnProperty.call(datapoints, key)) {
                 const path = name + "." + datapoints[key].path;
-                const value = datapoints[key];
-                this.log.info("initIobStates: " + JSON.stringify(path) + " = " + JSON.stringify(value));
+                const iobObject = datapoints[key];
+                this.log.info("initIobStates: " + JSON.stringify(path) + " = " + JSON.stringify(iobObject));
                 this.setObject(path, {
-                    type: datapoints[key].type,
-                    common: {
-                        name: datapoints[key].common.name,
-                        type: datapoints[key].common.type,
-                        role: datapoints[key].common.role,
-                        read: datapoints[key].common.read,
-                        write: datapoints[key].common.write,
-                    },
+                    type: iobObject.type,
+                    common: iobObject.common,
                     native: {},
                 });
             }
@@ -395,7 +389,11 @@ class Blebox extends utils.Adapter {
                 const value = values[key];
                 this.log.info("setIobStates: " + JSON.stringify(device.name + "." + path) + " = " + JSON.stringify(value));
                 if (path) {
-                    this.setState(device.name + "." + path, value);
+                    if (Object.prototype.hasOwnProperty.call(deviceDatapoints[key], "factor")) {
+                        this.setState(device.name + "." + path, value * deviceDatapoints[key].factor);
+                    } else {
+                        this.setState(device.name + "." + path, value);
+                    }
                 }
             }
         }
