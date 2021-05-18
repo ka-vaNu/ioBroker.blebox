@@ -55,7 +55,7 @@ class Blebox extends utils.Adapter {
                         shutterbox.init();
                         this.getBleboxData(device, "settingsState");
                         this.getBleboxData(device, "deviceState");
-                        this.getBleboxData(device, "shutterState");
+                        this.getBleboxData(device, "shutterExtendedState");
                         schedule.scheduleJob("*/10 * * * *", function () {
                             iob.getBleboxData(device, "deviceUptime");
                         });
@@ -168,21 +168,21 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, "shutterSendDown", null);
                                     response["command.move"] = "";
                                     await this.setIobStates(response);
-                                    this.getBleboxData(device, "shutterState");
+                                    this.getBleboxData(device, "shutterExtendedState");
                                     break;
                                 case "u":
                                     this.log.info("moving up");
                                     response = await this.getSimpleObject(device, "shutterSendUp", null);
                                     response["command.move"] = "";
                                     await this.setIobStates(response);
-                                    this.getBleboxData(device, "shutterState");
+                                    this.getBleboxData(device, "shutterExtendedState");
                                     break;
                                 case "s":
                                     this.log.info("moving up");
                                     response = await this.getSimpleObject(device, "shutterSendStop", null);
                                     response["command.move"] = "";
                                     await this.setIobStates(response);
-                                    this.getBleboxData(device, "shutterState");
+                                    this.getBleboxData(device, "shutterExtendedState");
                                     break;
                             }
                             break;
@@ -192,7 +192,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, "shutterTilt", state.val);
                                 response["command.tilt"] = "";
                                 await this.setIobStates(response);
-                                this.getBleboxData(device, "shutterState");
+                                this.getBleboxData(device, "shutterExtendedState");
                             }
                             break;
                         case this.namespace + "." + name + ".command.favorite":
@@ -201,7 +201,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, "shutterFavorite", state.val);
                                 response["command.favorite"] = "";
                                 await this.setIobStates(response);
-                                this.getBleboxData(device, "shutterState");
+                                this.getBleboxData(device, "shutterExtendedState");
                             }
                             break;
                         case this.namespace + "." + name + ".command.position":
@@ -210,7 +210,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, "shutterPosition", state.val);
                                 response["command.position"] = "";
                                 await this.setIobStates(response);
-                                this.getBleboxData(device, "shutterState");
+                                this.getBleboxData(device, "shutterExtendedState");
                             }
                             break;
                         default:
@@ -252,7 +252,7 @@ class Blebox extends utils.Adapter {
                             break;
                         case this.namespace + "." + name + ".command.desiredTemp":
                             this.log.info("set relayForTime to " + state.val);
-                            response = await this.getSimpleObject(device, "switchSetdesiredTemp", state.val);
+                            response = await this.getSimpleObject(device, "saunaboxSetdesiredTemp", state.val);
                             response["command.desiredTemp"] = "";
                             await this.setIobStates(response);
                             this.getBleboxData(device, "saunaboxExtendedState");
@@ -313,7 +313,7 @@ class Blebox extends utils.Adapter {
         locationUrl["shutterFavorite"] = "/s/f/" + val;
         locationUrl["shutterPosition"] = "/s/p/" + val;
         locationUrl["shutterTilt"] = "/s/t/" + val;
-        locationUrl["shutterState"] = "/api/shutter/state";
+        locationUrl["shutterExtendedState"] = "/api/shutter/extended/state";
         locationUrl["switchState"] = "/state";
         locationUrl["switchSetRelay"] = "/s/" + val;
         locationUrl["switchSetRelayForTime"] = "/s/1/forTime/" + val + "/ns/0";
@@ -321,7 +321,7 @@ class Blebox extends utils.Adapter {
         locationUrl["tempsensorExtendedState"] = "/api/tempsensor/state";
         locationUrl["saunaboxExtendedState"] = "/api/heat/extended/state";
         locationUrl["saunaboxSetHeat"] = "/s/" + val;
-        locationUrl["switchSetdesiredTemp"] = "/s/t/" + val;
+        locationUrl["saunaboxSetdesiredTemp"] = "/s/t/" + val;
         this.log.info("getSimpleObject : " + type + " URL: " + locationUrl[type] + " device: " + JSON.stringify(device));
         values = await this.simpleObjectUrlGetter(device, locationUrl[type]);
         return values;
