@@ -54,7 +54,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, "settingsState");
                         tools.getBleboxData(device, "deviceState");
                         tools.getBleboxData(device, "shutterExtendedState");
-                        schedule.scheduleJob("* * * * * *", function () {
+                        schedule.scheduleJob("*/10 * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
                             tools.getBleboxData(device, "shutterExtendedState");
                         });
@@ -159,6 +159,8 @@ class Blebox extends utils.Adapter {
             // The state was changed
             switch (device.type) {
                 case "shutterbox":
+                    // eslint-disable-next-line no-case-declarations
+                    let shutterboxRefreshJob = new Object;
                     switch (id) {
                         case this.namespace + "." + name + ".command.move":
                             switch (state.val) {
@@ -168,6 +170,9 @@ class Blebox extends utils.Adapter {
                                     response["command.move"] = "";
                                     await tools.setIobStates(response);
                                     tools.getBleboxData(device, "shutterExtendedState");
+                                    shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 20000), rule: "*/1 * * * * *" }, function () {
+                                        tools.getBleboxData(device, "shutterExtendedState");
+                                    });
                                     break;
                                 case "u":
                                     this.log.info("moving up");
@@ -175,6 +180,9 @@ class Blebox extends utils.Adapter {
                                     response["command.move"] = "";
                                     await tools.setIobStates(response);
                                     tools.getBleboxData(device, "shutterExtendedState");
+                                    shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 45000), rule: "*/1 * * * * *" }, function () {
+                                        tools.getBleboxData(device, "shutterExtendedState");
+                                    });
                                     break;
                                 case "s":
                                     this.log.info("moving up");
@@ -182,6 +190,9 @@ class Blebox extends utils.Adapter {
                                     response["command.move"] = "";
                                     await tools.setIobStates(response);
                                     tools.getBleboxData(device, "shutterExtendedState");
+                                    shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 45000), rule: "*/1 * * * * *" }, function () {
+                                        tools.getBleboxData(device, "shutterExtendedState");
+                                    });
                                     break;
                             }
                             break;
@@ -192,6 +203,9 @@ class Blebox extends utils.Adapter {
                                 response["command.tilt"] = "";
                                 await tools.setIobStates(response);
                                 tools.getBleboxData(device, "shutterExtendedState");
+                                shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 20000), rule: "*/1 * * * * *" }, function () {
+                                    tools.getBleboxData(device, "shutterExtendedState");
+                                });
                             }
                             break;
                         case this.namespace + "." + name + ".command.favorite":
@@ -201,6 +215,9 @@ class Blebox extends utils.Adapter {
                                 response["command.favorite"] = "";
                                 await tools.setIobStates(response);
                                 tools.getBleboxData(device, "shutterExtendedState");
+                                shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 20000), rule: "*/1 * * * * *" }, function () {
+                                    tools.getBleboxData(device, "shutterExtendedState");
+                                });
                             }
                             break;
                         case this.namespace + "." + name + ".command.position":
@@ -210,6 +227,10 @@ class Blebox extends utils.Adapter {
                                 response["command.position"] = "";
                                 await tools.setIobStates(response);
                                 tools.getBleboxData(device, "shutterExtendedState");
+                                // eslint-disable-next-line no-unused-vars
+                                shutterboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 20000), rule: "*/1 * * * * *" }, function () {
+                                    tools.getBleboxData(device, "shutterExtendedState");
+                                });
                             }
                             break;
                         default:
@@ -217,6 +238,8 @@ class Blebox extends utils.Adapter {
                     }
                     break;
                 case "switchbox":
+                    // eslint-disable-next-line no-case-declarations
+                    let switchboxRefreshJob = new Object;
                     switch (id) {
                         case this.namespace + "." + name + ".command.relay":
                             this.log.info("set relay to " + state.val);
@@ -224,15 +247,17 @@ class Blebox extends utils.Adapter {
                             response["command.relay"] = "";
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, "switchState");
-
-                            break;
+                        break;
                         case this.namespace + "." + name + ".command.setRelayForTime":
                             this.log.info("set relayForTime to " + state.val);
                             response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
                             response["command.setRelayForTime"] = "";
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, "switchState");
-
+                            // eslint-disable-next-line no-unused-vars
+                            switchboxRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 1000 * state.val + 1000), rule: "*/10 * * * * *" }, function () {
+                                tools.getBleboxData(device, "switchState");
+                            });
                             break;
 
                         default:
