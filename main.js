@@ -54,7 +54,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, "settingsState");
                         tools.getBleboxData(device, "deviceState");
                         tools.getBleboxData(device, "shutterExtendedState");
-                        schedule.scheduleJob("*/10 * * * *", function () {
+                        schedule.scheduleJob("* * * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
                             tools.getBleboxData(device, "shutterExtendedState");
                         });
