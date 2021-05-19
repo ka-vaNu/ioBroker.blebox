@@ -56,6 +56,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, "shutterExtendedState");
                         schedule.scheduleJob("*/10 * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
+                            tools.getBleboxData(device, "shutterExtendedState");
                         });
                         this.subscribeStates(device.name + ".command.*");
                         break;
@@ -63,10 +64,10 @@ class Blebox extends utils.Adapter {
                         switchbox.init();
                         tools.getBleboxData(device, "settingsState");
                         tools.getBleboxData(device, "deviceState");
-                        tools.getBleboxData(device, "switchState");
                         tools.getBleboxData(device, "switchExtendedState");
                         schedule.scheduleJob("*/10 * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
+                            tools.getBleboxData(device, "switchExtendedState");
                         });
                         this.subscribeStates(device.name + ".command.*");
                         break;
@@ -149,7 +150,7 @@ class Blebox extends utils.Adapter {
     async onStateChange(id, state) {
         const name = id.split(".")[2];
         const device = this.getDeviceByName(name);
-        const l_datapoint = this.datapoints[name];
+        const l_datapoint = this.datapoints[device.type + "#" + name];
         this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
         this.log.info("datapoint : " + JSON.stringify(l_datapoint));
         this.log.info("device : " + JSON.stringify(device));
