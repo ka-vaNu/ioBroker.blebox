@@ -3,6 +3,10 @@
         "name": "blebox",
         "version": "0.0.13",
         "news": {
+            "0.0.14": {
+                "en": "",
+                "de": "Bugfixing, Automatische Updates von Werten nach shutterbox- und switchbox-Befehlen, Refactoring Tools und Business-Logik, Konfigurierbarkeit verbessert"
+            },
             "0.0.13": {
                 "en": "",
                 "de": "saunabox hinzugefügt, Temperatur-Objekte gefixt."
