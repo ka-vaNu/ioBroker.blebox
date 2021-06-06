@@ -28,18 +28,20 @@ class Blebox extends utils.Adapter {
         this.on("unload", this.onUnload.bind(this));
         tools.setIob(this);
         this.datapoints = {};
+        this.extLog = {};
     }
 
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        this.log.info("Full config: " + JSON.stringify(this.config));
+        if (this.extLog) this.log.info("Full config: " + JSON.stringify(this.config));
         let result = await this.checkPasswordAsync("admin", "iobroker");
-        this.log.info("check user admin pw ioboker: " + result);
+        if (this.extLog) this.log.info("check user admin pw ioboker: " + result);
         result = await this.checkGroupAsync("admin", "admin");
-        this.log.info("check group user admin group admin: " + result);
+        if (this.extLog) this.log.info("check group user admin group admin: " + result);
         if (Object.prototype.hasOwnProperty.call(this.config, "devices")) {
+            this.extLog = this.config.extLog;
             this.config.devices.forEach(device => {
                 this.log.info("device name: " + device.name);
                 this.log.info("device smart_name: " + device.smart_name);
@@ -118,10 +120,10 @@ class Blebox extends utils.Adapter {
     onObjectChange(id, obj) {
         if (obj) {
             // The object was changed
-            this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+            if (this.extLog) this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
         } else {
             // The object was deleted
-            this.log.info(`object ${id} deleted`);
+            if (this.extLog) this.log.info(`object ${id} deleted`);
         }
     }
 
@@ -131,11 +133,11 @@ class Blebox extends utils.Adapter {
      */
     getDeviceByName(name) {
         let ret = {};
-        this.log.info("getDeviceByName # name : " + JSON.stringify(name));
+        if (this.extLog) this.log.info("getDeviceByName # name : " + JSON.stringify(name));
         this.config.devices.forEach(device => {
-            this.log.info("getDeviceByName # device : " + JSON.stringify(device));
+            if (this.extLog) this.log.info("getDeviceByName # device : " + JSON.stringify(device));
             if (device.name == name) {
-                this.log.info("getDeviceByName # return device : " + JSON.stringify(device));
+                if (this.extLog) this.log.info("getDeviceByName # return device : " + JSON.stringify(device));
                 ret = device;
             }
         });
@@ -151,9 +153,9 @@ class Blebox extends utils.Adapter {
         const name = id.split(".")[2];
         const device = this.getDeviceByName(name);
         const l_datapoint = this.datapoints[device.type + "#" + name];
-        this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
-        this.log.info("datapoint : " + JSON.stringify(l_datapoint));
-        this.log.info("device : " + JSON.stringify(device));
+        if (this.extLog) this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
+        if (this.extLog) this.log.info("datapoint : " + JSON.stringify(l_datapoint));
+        if (this.extLog) this.log.info("device : " + JSON.stringify(device));
         if (state) {
             let response = {};
             // The state was changed
@@ -247,7 +249,7 @@ class Blebox extends utils.Adapter {
                             response["command.relay"] = "";
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, "switchState");
-                        break;
+                            break;
                         case this.namespace + "." + name + ".command.setRelayForTime":
                             this.log.info("set relayForTime to " + state.val);
                             response = await this.getSimpleObject(device, "switchSetRelayForTime", state.val);
@@ -318,7 +320,7 @@ class Blebox extends utils.Adapter {
                 break;
         }
 
-        this.log.info("getSimpleObject : " + type + " URL: " + locationUrl + " device: " + JSON.stringify(device));
+        if (this.extLog) this.log.info("getSimpleObject : " + type + " URL: " + locationUrl + " device: " + JSON.stringify(device));
         values = await tools.simpleObjectUrlGetter(device, locationUrl);
         return values;
     }

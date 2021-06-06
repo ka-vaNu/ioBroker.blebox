@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.13",
+        "version": "0.0.15",
         "news": {
+            "0.0.15": {
+                "en": "",
+                "de": "Logging durch Checkbox einstellbar"
+            },
             "0.0.14": {
                 "en": "",
                 "de": "Bugfixing, Automatische Updates von Werten nach shutterbox- und switchbox-Befehlen, Refactoring Tools und Business-Logik, Konfigurierbarkeit verbessert"
