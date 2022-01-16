@@ -1,8 +1,12 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.0.15",
+        "version": "0.0.16",
         "news": {
+            "0.0.16": {
+                "en": "",
+                "de": "Abhängigkeiten aktualisiert"
+            },
             "0.0.15": {
                 "en": "",
                 "de": "Logging durch Checkbox einstellbar"
@@ -93,9 +97,11 @@
         "type": "iot-systems",
         "compact": true,
         "materialize": true,
+        "connectionType": "local",
+        "dataSource": "poll",
         "dependencies": [
             {
-                "js-controller": ">=1.4.2"
+                "js-controller": ">=2.0.0"
             }
         ]
     },
