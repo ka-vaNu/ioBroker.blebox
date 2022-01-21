@@ -4,82 +4,234 @@
         "version": "0.1.1",
         "news": {
             "0.1.1": {
-                "en": "",
-                "de": "Erstes Stable-Release"
+                "en": "First stable release",
+                "de": "Erstes Stable-Release",
+                "ru": "Первый стабильный релиз",
+                "pt": "Primeira versão estável",
+                "nl": "Eerste stabiele release",
+                "fr": "Première version stable",
+                "it": "Prima versione stabile",
+                "es": "Primera versión estable",
+                "pl": "Pierwsze stabilne wydanie",
+                "zh-cn": "第一个稳定版本"
             },
             "0.0.16": {
-                "en": "",
-                "de": "Abhängigkeiten aktualisiert"
+                "en": "Dependencies updated",
+                "de": "Abhängigkeiten aktualisiert",
+                "ru": "Зависимости обновлены",
+                "pt": "Dependências atualizadas",
+                "nl": "Afhankelijkheden bijgewerkt",
+                "fr": "Dépendances mises à jour",
+                "it": "Dipendenze aggiornate",
+                "es": "Dependencias actualizadas",
+                "pl": "Zaktualizowano zależności",
+                "zh-cn": "已更新依赖项"
             },
             "0.0.15": {
-                "en": "",
-                "de": "Logging durch Checkbox einstellbar"
+                "en": "Logging adjustable by checkbox",
+                "de": "Logging per Checkbox einstellbar",
+                "ru": "Ведение журнала регулируется флажком",
+                "pt": "Registro ajustável por caixa de seleção",
+                "nl": "Logging instelbaar via selectievakje",
+                "fr": "Journalisation réglable par case à cocher",
+                "it": "Registrazione regolabile tramite checkbox",
+                "es": "Registro ajustable por casilla de verificación",
+                "pl": "Rejestrowanie regulowane za pomocą pola wyboru",
+                "zh-cn": "可通过复选框调整日志记录"
             },
             "0.0.14": {
-                "en": "",
-                "de": "Bugfixing, Automatische Updates von Werten nach shutterbox- und switchbox-Befehlen, Refactoring Tools und Business-Logik, Konfigurierbarkeit verbessert"
+                "en": "Bugfixing, automatic updates of values after shutterbox and switchbox commands, refactoring tools and business logic, configurability improved",
+                "de": "Fehlerbehebung, automatische Aktualisierung von Werten nach Shutterbox- und Switchbox-Befehlen, Refactoring-Tools und Geschäftslogik, Konfigurierbarkeit verbessert",
+                "ru": "Исправление ошибок, автоматическое обновление значений после команд Shutterbox и Switchbox, инструменты рефакторинга и бизнес-логики, улучшена конфигурируемость",
+                "pt": "Correção de bugs, atualizações automáticas de valores após comandos do shutterbox e switchbox, ferramentas de refatoração e lógica de negócios, configurabilidade aprimorada",
+                "nl": "Bugfixing, automatische updates van waarden na shutterbox- en switchbox-opdrachten, refactoringtools en bedrijfslogica, verbeterde configuratiemogelijkheden",
+                "fr": "Correction de bogues, mises à jour automatiques des valeurs après les commandes de l'obturateur et de l'interrupteur, outils de refactorisation et logique métier, configurabilité améliorée",
+                "it": "Bugfixing, aggiornamenti automatici dei valori dopo i comandi shutterbox e switchbox, strumenti di refactoring e business logic, configurabilità migliorata",
+                "es": "Corrección de errores, actualizaciones automáticas de valores después de los comandos de la caja de obturación y de la caja de cambios, herramientas de refactorización y lógica de negocios, capacidad de configuración mejorada",
+                "pl": "Naprawa błędów, automatyczne aktualizacje wartości po poleceniach shutterbox i switchbox, narzędzia refaktoryzacji i logika biznesowa, poprawiona konfigurowalność",
+                "zh-cn": "错误修复，快门框和开关框命令后自动更新值，重构工具和业务逻辑，可配置性提高"
             },
             "0.0.13": {
-                "en": "",
-                "de": "saunabox hinzugefügt, Temperatur-Objekte gefixt."
+                "en": "saunabox added, temperature objects fixed.",
+                "de": "Saunabox hinzugefügt, Temperaturobjekte korrigiert.",
+                "ru": "добавлена сауна, исправлены температурные объекты.",
+                "pt": "saunabox adicionado, objetos de temperatura corrigidos.",
+                "nl": "saunabox toegevoegd, temperatuurobjecten opgelost.",
+                "fr": "saunabox ajouté, objets de température corrigés.",
+                "it": "saunabox aggiunto, oggetti temperatura fissati.",
+                "es": "Saunabox agregado, objetos de temperatura arreglados.",
+                "pl": "dodano saunabox, naprawiono obiekty temperatury.",
+                "zh-cn": "增加了桑拿箱，固定了温度对象。"
             },
             "0.0.12": {
-                "en": "",
-                "de": "tempSensor hinzugefügt, refactoring von Arrays in den Responses, Pfad für Werte kann jetzt explizit festgelegt werden"
+                "en": "tempSensor added, refactoring of arrays in the responses, path for values can now be set explicitly",
+                "de": "tempSensor hinzugefügt, Refactoring von Arrays in den Antworten, Pfad für Werte kann nun explizit gesetzt werden",
+                "ru": "добавлен tempSensor, рефакторинг массивов в ответах, путь для значений теперь можно задавать явно",
+                "pt": "tempSensor adicionado, refatoração de matrizes nas respostas, caminho para valores agora pode ser definido explicitamente",
+                "nl": "tempSensor toegevoegd, refactoring van arrays in de reacties, pad voor waarden kan nu expliciet worden ingesteld",
+                "fr": "tempSensor ajouté, refactorisation des tableaux dans les réponses, le chemin pour les valeurs peut maintenant être défini explicitement",
+                "it": "tempSensor aggiunto, refactoring degli array nelle risposte, il percorso per i valori ora può essere impostato in modo esplicito",
+                "es": "tempSensor agregado, refactorización de matrices en las respuestas, la ruta para los valores ahora se puede establecer explícitamente",
+                "pl": "dodano tempSensor, refaktoryzację tablic w odpowiedziach, można teraz ustawić ścieżkę do wartości w sposób jawny",
+                "zh-cn": "添加了 tempSensor，重构了响应中的数组，现在可以显式设置值的路径"
             },
             "0.0.11": {
-                "en": "",
-                "de": "ShutterDown und ShutterStop gefixt und setRelayForTime nach Ausführung geleert"
+                "en": "ShutterDown and ShutterStop fixed and setRelayForTime emptied after execution",
+                "de": "ShutterDown und ShutterStop behoben und setRelayForTime nach Ausführung geleert",
+                "ru": "ShutterDown и ShutterStop исправлены, а setRelayForTime очищается после выполнения",
+                "pt": "ShutterDown e ShutterStop corrigidos e setRelayForTime esvaziado após a execução",
+                "nl": "ShutterDown en ShutterStop vast en setRelayForTime geleegd na uitvoering",
+                "fr": "ShutterDown et ShutterStop corrigés et setRelayForTime vidé après exécution",
+                "it": "ShutterDown e ShutterStop fissi e setRelayForTime svuotati dopo l'esecuzione",
+                "es": "ShutterDown y ShutterStop arreglados y setRelayForTime vaciados después de la ejecución",
+                "pl": "ShutterDown i ShutterStop naprawione i ustawioneRelayForTime opróżnione po wykonaniu",
+                "zh-cn": "修复了 ShutterDown 和 ShutterStop 并在执行后清空了 setRelayForTime"
             },
             "0.0.10": {
-                "en": "",
-                "de": "Exception bei HTTP-Requests fangen"
+                "en": "Catch exception on HTTP requests",
+                "de": "Ausnahme bei HTTP-Anforderungen abfangen",
+                "ru": "Поймать исключение в HTTP-запросах",
+                "pt": "Capturar exceção em solicitações HTTP",
+                "nl": "Vang uitzondering op HTTP-verzoeken",
+                "fr": "Attraper l'exception sur les requêtes HTTP",
+                "it": "Cattura l'eccezione sulle richieste HTTP",
+                "es": "Atrapar excepción en solicitudes HTTP",
+                "pl": "Złap wyjątek na żądaniach HTTP",
+                "zh-cn": "捕获 HTTP 请求的异常"
             },
             "0.0.9": {
-                "en": "",
-                "de": "ShutterDown und ShutterStop gefixt"
+                "en": "ShutterDown and ShutterStop fixed",
+                "de": "ShutterDown und ShutterStop behoben",
+                "ru": "ShutterDown и ShutterStop исправлены",
+                "pt": "ShutterDown e ShutterStop corrigidos",
+                "nl": "ShutterDown en ShutterStop vast",
+                "fr": "ShutterDown et ShutterStop corrigés",
+                "it": "ShutterDown e ShutterStop fissi",
+                "es": "ShutterDown y ShutterStop arreglados",
+                "pl": "Naprawiono ShutterDown i ShutterStop",
+                "zh-cn": "ShutterDown 和 ShutterStop 已修复"
             },
             "0.0.8": {
-                "en": "",
-                "de": "Erstellung der Datenpunkte der switchbox gefixt"
+                "en": "Creation of the data points of the switchbox fixed",
+                "de": "Anlegen der Datenpunkte der Schaltbox behoben",
+                "ru": "Создание точек данных распределительной коробки исправлено",
+                "pt": "Criação dos pontos de dados do switchbox fixo",
+                "nl": "Aanmaken van de datapunten van de schakelkast vast",
+                "fr": "Création des points de données du boîtier de commutation fixe",
+                "it": "Creazione dei punti dati del quadro elettrico fisso",
+                "es": "Creación de los puntos de datos de la caja de distribución fija",
+                "pl": "Naprawiono tworzenie punktów danych w skrzynce rozdzielczej",
+                "zh-cn": "固定开关盒数据点的创建"
             },
             "0.0.7": {
-                "en": "",
-                "de": "Datenpunkte der switchbox verbessert"
+                "en": "Data points of the switchbox improved",
+                "de": "Datenpunkte der switchbox verbessert",
+                "ru": "Точки данных распределительной коробки улучшены",
+                "pt": "Pontos de dados da caixa de comutação melhorados",
+                "nl": "Gegevenspunten van de schakelkast verbeterd",
+                "fr": "Points de données du boîtier de commutation améliorés",
+                "it": "I punti dati del quadro elettrico sono migliorati",
+                "es": "Puntos de datos de la caja de interruptores mejorados",
+                "pl": "Poprawiono punkty danych w skrzynce rozdzielczej",
+                "zh-cn": "开关盒的数据点得到改善"
             },
             "0.0.6": {
-                "en": "",
-                "de": "Version nochmal korrigiert"
+                "en": "Version corrected again",
+                "de": "Version nochmals korrigiert",
+                "ru": "Версия снова исправлена",
+                "pt": "Versão corrigida novamente",
+                "nl": "Versie opnieuw gecorrigeerd",
+                "fr": "Version corrigée à nouveau",
+                "it": "Versione corretta di nuovo",
+                "es": "Versión corregida de nuevo",
+                "pl": "Wersja poprawiona ponownie",
+                "zh-cn": "版本再次更正"
             },
             "0.0.5": {
-                "en": "",
-                "de": "Version korrigiert"
+                "en": "Version corrected",
+                "de": "Version korrigiert",
+                "ru": "Версия исправлена",
+                "pt": "Versão corrigida",
+                "nl": "Versie gecorrigeerd",
+                "fr": "Version corrigée",
+                "it": "Versione corretta",
+                "es": "Versión corregida",
+                "pl": "Wersja poprawiona",
+                "zh-cn": "版本更正"
             },
             "0.0.4": {
-                "en": "",
-                "de": "Ergänzung um switchbox"
+                "en": "Addition of switchbox",
+                "de": "switchbox hinzugefügt",
+                "ru": "Добавление распределительной коробки",
+                "pt": "Adição de switchbox",
+                "nl": "Toevoeging van switchbox",
+                "fr": "Ajout switchbox",
+                "it": "Aggiunta di switchbox",
+                "es": "Adición de switchbox",
+                "pl": "Dodanie skrzynki rozdzielczej",
+                "zh-cn": "增加开关盒"
             },
             "0.0.3": {
-                "en": "",
-                "de": "Mehrere Devices in einer Instanz"
+                "en": "Multiple devices in one instance",
+                "de": "Mehrere Geräte in einer Instanz",
+                "ru": "Несколько устройств в одном экземпляре",
+                "pt": "Vários dispositivos em uma instância",
+                "nl": "Meerdere apparaten in één instantie",
+                "fr": "Plusieurs appareils dans une seule instance",
+                "it": "Più dispositivi in un'unica istanza",
+                "es": "Múltiples dispositivos en una instancia",
+                "pl": "Wiele urządzeń w jednej instancji",
+                "zh-cn": "一个实例中的多个设备"
             },
             "0.0.2": {
-                "en": "",
-                "de": "Verbesserung des Statushandlings"
+                "en": "Improvement of the status handling",
+                "de": "Verbesserung der Statusbehandlung",
+                "ru": "Улучшение обработки статуса",
+                "pt": "Melhoria do tratamento de status",
+                "nl": "Verbetering van de statusafhandeling",
+                "fr": "Amélioration de la gestion des statuts",
+                "it": "Miglioramento della gestione dello stato",
+                "es": "Mejora de la gestión de estados.",
+                "pl": "Poprawa obsługi statusu",
+                "zh-cn": "状态处理的改进"
             },
             "0.0.1": {
-                "en": "",
-                "de": "Initial Release"
+                "en": "Initial Release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "Lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "初始发行"
             }
         },
         "title": "Blebox",
         "titleLang": {
             "en": "Blebox",
-            "de": "Blebox"
+            "de": "Blebox",
+            "ru": "блебокс",
+            "pt": "Blebox",
+            "nl": "Blebox",
+            "fr": "Blébox",
+            "it": "Blebox",
+            "es": "Blebox",
+            "pl": "Blebox",
+            "zh-cn": "盲盒"
         },
         "desc": {
-            "en": "Adapter für Bleboxsysteme",
-            "de": "Adapter für Bleboxsysteme"
+            "en": "Adapter for blebox systems",
+            "de": "Adapter für Blebox-Systeme",
+            "ru": "Адаптер для blebox-систем",
+            "pt": "Adaptador para sistemas blebox",
+            "nl": "Adapter voor blebox-systemen",
+            "fr": "Adaptateur pour systèmes blebox",
+            "it": "Adattatore per sistemi blebox",
+            "es": "Adaptador para sistemas blebox",
+            "pl": "Adapter do systemów blebox",
+            "zh-cn": "blebox系统适配器"
         },
         "authors": [
             "Kai van Nuis <kai@vannuis.de>"
