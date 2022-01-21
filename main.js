@@ -154,7 +154,7 @@ class Blebox extends utils.Adapter {
         if (this.extLog) this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
         if (this.extLog) this.log.info("datapoint : " + JSON.stringify(l_datapoint));
         if (this.extLog) this.log.info("device : " + JSON.stringify(device));
-        if (state) {
+        if (state.ack === false) {
             let response = {};
             // The state was changed
             switch (device.type) {
