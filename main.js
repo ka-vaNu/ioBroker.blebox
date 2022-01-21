@@ -36,10 +36,6 @@ class Blebox extends utils.Adapter {
      */
     async onReady() {
         if (this.extLog) this.log.info("Full config: " + JSON.stringify(this.config));
-        let result = await this.checkPasswordAsync("admin", "iobroker");
-        if (this.extLog) this.log.info("check user admin pw ioboker: " + result);
-        result = await this.checkGroupAsync("admin", "admin");
-        if (this.extLog) this.log.info("check group user admin group admin: " + result);
         if (Object.prototype.hasOwnProperty.call(this.config, "devices")) {
             this.extLog = this.config.extLog;
             this.config.devices.forEach(device => {
