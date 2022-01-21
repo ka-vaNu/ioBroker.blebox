@@ -185,7 +185,7 @@ class Blebox extends utils.Adapter {
                                     });
                                     break;
                                 case "s":
-                                    this.log.info("moving up");
+                                    this.log.info("stop moving");
                                     response = await this.getSimpleObject(device, "shutterSendStop", null);
                                     response["command.move"] = "";
                                     await tools.setIobStates(response);
