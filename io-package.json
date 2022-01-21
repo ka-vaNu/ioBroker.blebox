@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "news": {
+            "0.1.2": {
+                "en": "Small changes due to codereview",
+                "de": "Kleine Änderungen wegen Codereview",
+                "ru": "Небольшие изменения в связи с codereview",
+                "pt": "Pequenas alterações devido à revisão de código",
+                "nl": "Kleine wijzigingen door codereview",
+                "fr": "Petits changements dus à la révision du code",
+                "it": "Piccole modifiche dovute alla revisione del codice",
+                "es": "Pequeños cambios debido a la revisión de código.",
+                "pl": "Małe zmiany wynikające z przeglądu kodu",
+                "zh-cn": "由于 codereview 的小改动"
+            },
             "0.1.1": {
                 "en": "First stable release",
                 "de": "Erstes Stable-Release",
