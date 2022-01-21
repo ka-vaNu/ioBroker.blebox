@@ -100,8 +100,10 @@ class Blebox extends utils.Adapter {
      * @param {() => void} callback
      */
     onUnload(callback) {
+        this.log.info("Shutting down...");
         try {
-            this.log.info("cleaned everything up...");
+            this.schedule.gracefulShutdown();
+            this.log.info("All Jobs shutted down...");
             callback();
         } catch (e) {
             callback();
