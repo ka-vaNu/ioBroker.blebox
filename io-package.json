@@ -255,21 +255,6 @@
         "materialize": true,
         "connectionType": "local",
         "dataSource": "poll",
-        "adminTab": {
-            "name": {
-                "en": "blebox",
-                "de": "blebox",
-                "ru": "blebox",
-                "pt": "blebox",
-                "nl": "blebox",
-                "fr": "blebox",
-                "it": "blebox",
-                "es": "blebox",
-                "pl": "blebox",
-                "zh-cn": "blebox"
-            },
-            "fa-icon": "</i><img style='width:24px;margin-bottom:-6px;' src='/blebox.png'><i>"
-        },
         "native": {
             "extLog": false
         },
