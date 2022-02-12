@@ -3,7 +3,7 @@
 
 const utils = require("@iobroker/adapter-core");
 
-const tools = require(__dirname + "/lib/tools");
+const tools = require("./lib/tools");
 const schedule = require("node-schedule");
 const shutterbox = require("./lib/shutterbox");
 const switchbox = require("./lib/switchbox");
@@ -102,7 +102,7 @@ class Blebox extends utils.Adapter {
     onUnload(callback) {
         this.log.info("Shutting down...");
         try {
-            this.schedule.gracefulShutdown();
+            schedule.gracefulShutdown();
             this.log.info("All Jobs shutted down...");
             callback();
         } catch (e) {
