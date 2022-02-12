@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "blebox",
-        "version": "0.1.2",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                "en": "Release for official repository, small changes due to code review",
+                "de": "Veröffentlichung für offizielles Repository, kleine Änderungen aufgrund von Codeüberprüfung",
+                "ru": "Релиз для официального репозитория, небольшие изменения в связи с просмотром кода",
+                "pt": "Lançamento para repositório oficial, pequenas alterações devido a revisão de código",
+                "nl": "Vrijgave voor officiële repository, kleine wijzigingen vanwege codebeoordeling",
+                "fr": "Version pour le référentiel officiel, petits changements dus à la révision du code",
+                "it": "Rilascio per repository ufficiale, piccole modifiche dovute alla revisione del codice",
+                "es": "Lanzamiento para el repositorio oficial, pequeños cambios debido a la revisión del código.",
+                "pl": "Wydanie do oficjalnego repozytorium, drobne zmiany związane z przeglądem kodu",
+                "zh-cn": "发布官方存储库，由于代码审查的小改动"
+            },
             "0.1.2": {
                 "en": "Small changes due to codereview",
                 "de": "Kleine Änderungen wegen Codereview",

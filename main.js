@@ -285,9 +285,6 @@ class Blebox extends utils.Adapter {
 
                     }
             }
-        } else {
-            // The state was deleted
-            this.log.info(`state ${id} deleted`);
         }
     }
 
