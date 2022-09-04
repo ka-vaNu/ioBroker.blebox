@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "blebox",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "news": {
+            "1.1.0": {
+                "en": "Support for gatebox implemented, changeover eslint",
+                "de": "Unterstützung für Gateway implementiert, Umstellung eslint",
+                "ru": "Поддержка внедренного шлюза, смена эслинта",
+                "pt": "Suporte para gatebox implementado, eslint changeover",
+                "nl": "Vertaling:",
+                "fr": "Appui à la boîte de portes mise en œuvre, changement d ' eslint",
+                "it": "Supporto per gatebox implementato, changeover eslint",
+                "es": "Soporte para caja de entrada implementada, cambio de eslint",
+                "pl": "Wsparcie dla bramki zaimplementowane jest zmiana eslint",
+                "zh-cn": "支持执行的门箱、更替场"
+            },
             "1.0.0": {
                 "en": "Release for official repository, small changes due to code review",
                 "de": "Veröffentlichung für offizielles Repository, kleine Änderungen aufgrund von Codeüberprüfung",
