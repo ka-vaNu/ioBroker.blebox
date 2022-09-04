@@ -25,6 +25,10 @@ Aktuell werden folgende Geräte unterstützt:
 
 ## Changelog
 
+### 1.1.0
+
+* Support für gateBox implementiert und eslint umgestellt
+
 ### 0.1.2
 
 * Fixes aufgrund Codereview

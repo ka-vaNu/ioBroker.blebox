@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.0",
+    "@iobroker/adapter-dev": "^1.0.1",
     "axios": "^0.27.2",
     "dot-object": "^2.1.4",
     "node-schedule": "^2.1.0"
