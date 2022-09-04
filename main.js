@@ -64,7 +64,7 @@ class Blebox extends utils.Adapter {
             tools.getBleboxData(device, 'gateExtendedState')
             tools.getBleboxData(device, 'deviceState')
             tools.getBleboxData(device, 'deviceUptime')
-            schedule.scheduleJob('*/1 * * * *', function () {
+            schedule.scheduleJob('*/10 * * * *', function () {
               tools.getBleboxData(device, 'deviceUptime')
               tools.getBleboxData(device, 'deviceState')
               tools.getBleboxData(device, 'gateExtendedState')
