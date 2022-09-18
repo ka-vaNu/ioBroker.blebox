@@ -25,6 +25,15 @@ Aktuell werden folgende Geräte unterstützt:
 
 ## Changelog
 
+<!--
+    Placeholder for the next version:
+    ### **WORK IN PROGRESS**
+-->
+
+### **WORK IN PROGRESS**
+
+* (Kai van Nuis) Change to Admin UI 5
+
 ### 1.1.0
 
 * Support für gateBox implementiert und eslint umgestellt
