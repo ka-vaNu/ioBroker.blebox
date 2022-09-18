@@ -11,5 +11,9 @@
         "sourceType": "module"
     },
     "rules": {
+        "indent": ["error", 4],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "indent": ["error", 4, {"SwitchCase": 1}]
     }
 }
