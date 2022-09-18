@@ -29,6 +29,7 @@ Aktuell werden folgende Geräte unterstützt:
     Placeholder for the next version:
     ### **WORK IN PROGRESS**
 -->
+
 ### 2.0.0 (2022-09-18)
 
 * (Kai van Nuis) Change to Admin UI 5
