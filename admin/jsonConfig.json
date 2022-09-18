@@ -1,0 +1,96 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "extLog": {
+            "type": "checkbox",
+            "label": "Extended logging",
+            "newLine": true
+        },
+        "divider": {
+            "type": "divider"
+        },
+        "devices": {
+            "type": "table",
+            "label": "Devices",
+            "items": [
+                {
+                    "type": "text",
+                    "width": "20%",
+                    "title": {
+                        "en": "Name"
+                    },
+                    "attr": "dev_name",
+                    "filter": false,
+                    "sort": true,
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "width": "20%",
+                    "title": {
+                        "en": "Smart name"
+                    },
+                    "attr": "smart_name",
+                    "filter": false,
+                    "sort": true,
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "width": "20%",
+                    "title": {
+                        "en": "IP Adress"
+                    },
+                    "attr": "dev_ip",
+                    "filter": false,
+                    "sort": true,
+                    "default": ""
+                },
+                {
+                    "type": "text",
+                    "width": "20%",
+                    "title": {
+                        "en": "Port"
+                    },
+                    "attr": "dev_port",
+                    "filter": false,
+                    "sort": true,
+                    "default": "80"
+                },
+                {
+                    "type": "select",
+                    "width": "20%",
+                    "title": {
+                        "en": "Type"
+                    },
+                    "attr": "dev_type",
+                    "filter": false,
+                    "sort": true,
+                    "options": [
+                        {
+                            "label": "gatebox",
+                            "value": "gatebox"
+                        },
+                        {
+                            "label": "saunabox",
+                            "value": "saunabox"
+                        },
+                        {
+                            "label": "shutterbox",
+                            "value": "shutterbox"
+                        },
+                        {
+                            "label": "switchbox",
+                            "value": "switchbox"
+                        },
+                        {
+                            "label": "tempsensor",
+                            "value": "tempsensor"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

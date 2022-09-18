@@ -244,6 +244,7 @@
                 "zh-cn": "初始发行"
             }
         },
+        "title": "Blebox",
         "titleLang": {
             "en": "Blebox",
             "de": "Blebox",
@@ -288,12 +289,17 @@
         "materialize": true,
         "connectionType": "local",
         "dataSource": "poll",
-        "native": {
-            "extLog": false
+        "adminUI": {
+            "config": "json"
         },
         "dependencies": [
             {
-                "js-controller": ">=2.0.0"
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
             }
         ]
     },
