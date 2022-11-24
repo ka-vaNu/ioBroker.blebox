@@ -10,6 +10,7 @@ const shutterbox = require("./lib/shutterbox");
 const switchbox = require("./lib/switchbox");
 const tempsensor = require("./lib/tempsensor");
 const saunabox = require("./lib/saunabox");
+const tvlift = require("./lib/tvlift");
 
 class Blebox extends utils.Adapter {
     /**
@@ -58,6 +59,16 @@ class Blebox extends utils.Adapter {
                             tools.getBleboxData(device, "shutterExtendedState");
                         });
                         this.subscribeStates(device.dev_name + ".command.*");
+                        break;
+                    case "tvlift":
+                        tvlift.init();
+                        tools.getBleboxData(device, "deviceState");
+                        tools.getBleboxData(device, "deviceNetwork");
+                        tools.getBleboxData(device, "tvliftExtendedState");
+                        schedule.scheduleJob("*/10 * * * *", function () {
+                            tools.getBleboxData(device, "deviceUptime");
+                        });
+                        this.subscribeStates(device.name + ".command.*");
                         break;
                     case "gatebox":
                         gatebox.init();
@@ -255,6 +266,39 @@ class Blebox extends utils.Adapter {
                             this.log.error(`state ${id} not processed`);
                     }
                     break;
+                case "tvlift":
+                    // eslint-disable-next-line no-case-declarations, no-new-object
+                    let tvliftRefreshJob = new Object();
+                    switch (id) {
+                        case this.namespace + "." + name + ".command.move":
+                            switch (state.val) {
+                                case "d":
+                                    this.log.info("moving down");
+                                    response = await this.getSimpleObject(device, "tvliftSendDown", null);
+                                    response["command.move"] = "";
+                                    await tools.setIobStates(response);
+                                    tools.getBleboxData(device, "tvliftExtendedState");
+                                    tvliftRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 20000), rule: "*/1 * * * * *" }, function () {
+                                        tools.getBleboxData(device, "tvliftExtendedState");
+                                    });
+                                    break;
+                                case "u":
+                                    this.log.info("moving up");
+                                    response = await this.getSimpleObject(device, "tvliftSendUp", null);
+                                    response["command.move"] = "";
+                                    await tools.setIobStates(response);
+                                    tools.getBleboxData(device, "tvliftExtendedState");
+                                    // eslint-disable-next-line no-unused-vars
+                                    tvliftRefreshJob = schedule.scheduleJob({ start: new Date(Date.now() + 1000), end: new Date(Date.now() + 45000), rule: "*/1 * * * * *" }, function () {
+                                        tools.getBleboxData(device, "tvliftExtendedState");
+                                    });
+                                    break;
+                            }
+                            break;
+                        default:
+                            this.log.error(`state ${id} not processed`);
+                    }
+                    break;
                 case "switchbox":
                     // eslint-disable-next-line no-case-declarations
                     let switchboxRefreshJob = {};
@@ -379,6 +423,9 @@ class Blebox extends utils.Adapter {
             case "shutterbox":
                 locationUrl = shutterbox.getApiUrl(type, val);
                 break;
+            case "tvlift":
+                locationUrl = tvlift.getApiUrl(type, val);
+                break;
             case "tempsensor":
                 locationUrl = tempsensor.getApiUrl(type, val);
                 break;
@@ -403,6 +450,8 @@ class Blebox extends utils.Adapter {
                 return gatebox.datapoints;
             case "shutterbox":
                 return shutterbox.datapoints;
+            case "tvlift":
+                return tvlift.datapoints;
             case "switchbox":
                 return switchbox.datapoints;
             case "tempsensor":
