@@ -68,7 +68,7 @@ class Blebox extends utils.Adapter {
                         schedule.scheduleJob("*/10 * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
                         });
-                        this.subscribeStates(device.name + ".command.*");
+                        this.subscribeStates(device.dev_name + ".command.*");
                         break;
                     case "gatebox":
                         gatebox.init();
