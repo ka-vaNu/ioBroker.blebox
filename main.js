@@ -72,14 +72,10 @@ class Blebox extends utils.Adapter {
                         break;
                     case "gatebox":
                         gatebox.init();
-                        tools.getBleboxData(device, "deviceState");
                         tools.getBleboxData(device, "settingsState");
-                        tools.getBleboxData(device, "gateExtendedState");
                         tools.getBleboxData(device, "deviceState");
-                        tools.getBleboxData(device, "deviceUptime");
-                        schedule.scheduleJob("*/10 * * * *", function () {
+                        schedule.scheduleJob("*/10 * * * * *", function () {
                             tools.getBleboxData(device, "deviceUptime");
-                            tools.getBleboxData(device, "deviceState");
                             tools.getBleboxData(device, "gateExtendedState");
                         });
                         this.subscribeStates(device.dev_name + ".command.*");
