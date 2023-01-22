@@ -9,22 +9,27 @@
 
 // tslint:disable:no-unused-expression
 
+// @ts-ignore
 const { expect } = require("chai");
 // import { functionToTest } from "./moduleToTest";
 
+// @ts-ignore
+// eslint-disable-next-line no-undef
 describe("module to test => function to test", () => {
-	// initializing logic
-	const expected = 5;
+    // initializing logic
+    const expected = 5;
 
-	it(`should return ${expected}`, () => {
-		const result = 5;
-		// assign result a value from functionToTest
-		expect(result).to.equal(expected);
-		// or using the should() syntax
-		result.should.equal(expected);
-	});
-	// ... more tests => it
-
+    // @ts-ignore
+    // eslint-disable-next-line no-undef
+    it(`should return ${expected}`, () => {
+        const result = 5;
+        // assign result a value from functionToTest
+        expect(result).to.equal(expected);
+        // or using the should() syntax
+        // @ts-ignore
+        result.should.equal(expected);
+    });
+    // ... more tests => it
 });
 
 // ... more test suites => describe
