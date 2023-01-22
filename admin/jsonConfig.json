@@ -87,6 +87,10 @@
                         {
                             "label": "tempsensor",
                             "value": "tempsensor"
+                        },
+                        {
+                            "label": "tvlift",
+                            "value": "tvlift"
                         }
                     ]
                 }
