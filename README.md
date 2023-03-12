@@ -32,6 +32,8 @@ Aktuell werden folgende Geräte unterstützt:
     ### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS** - (Kai van Nuis) Update dependecies
+
 ### 2.0.0 (2022-09-18)
 
 * (Kai van Nuis) Change to Admin UI 5

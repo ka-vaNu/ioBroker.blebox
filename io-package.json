@@ -1,8 +1,34 @@
 {
     "common": {
         "name": "blebox",
-        "version": "2.0.0",
+        "version": "2.0.1",
         "news": {
+            "2.0.1": {
+                "en": "Update dependencies",
+                "de": "Abhängigkeiten aktualisieren",
+                "ru": "Обновить зависимости",
+                "pt": "Dependências de atualização",
+                "nl": "Update afhankelijkheid",
+                "fr": "Mettre à jour les dépendances",
+                "it": "Dipendenze di aggiornamento",
+                "es": "Actualizar las dependencias",
+                "pl": "Zależności aktualnej",
+                "uk": "Оновлення залежності",
+                "zh-cn": "最新依赖"
+              },
+            "2.0.0": {
+                "en": "Support for tvlift implemented, changed to Admin-UI5",
+                "de": "Unterstützung für tvlift implementiert, geändert in Admin-UI5",
+                "ru": "Поддержка телепогрузчика реализована, изменена на Admin-UI5",
+                "pt": "Suporte para tvlift implementado, alterado para Admin-UI5",
+                "nl": "Vertaling:",
+                "fr": "Support pour le chariot élévateur mis en œuvre, changé pour Admin-UI5",
+                "it": "Supporto per tvlift implementato, cambiato in Admin-UI5",
+                "es": "Apoyo para la telesilla implementado, cambiado a Admin-UI5",
+                "pl": "Wsparcie dla telewizji zostało zmienione na Admin-UI5",
+                "uk": "Підтримка телеліфту впроваджено, змінено на Admin-UI5",
+                "zh-cn": "实施了“软禁”的支助,改为“I5”。"
+            },
             "1.1.0": {
                 "en": "Support for gatebox implemented, changeover eslint",
                 "de": "Unterstützung für Gateway implementiert, Umstellung eslint",
