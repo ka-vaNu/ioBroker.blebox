@@ -1,6 +1,6 @@
 {
   "name": "iobroker.blebox",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Adapter für Bleboxsysteme",
   "author": {
     "name": "Kai van Nuis",
