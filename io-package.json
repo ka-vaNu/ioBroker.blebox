@@ -15,7 +15,7 @@
                 "pl": "Zależności aktualnej",
                 "uk": "Оновлення залежності",
                 "zh-cn": "最新依赖"
-              },
+            },
             "2.0.0": {
                 "en": "Support for tvlift implemented, changed to Admin-UI5",
                 "de": "Unterstützung für tvlift implementiert, geändert in Admin-UI5",
@@ -39,7 +39,8 @@
                 "it": "Supporto per gatebox implementato, changeover eslint",
                 "es": "Soporte para caja de entrada implementada, cambio de eslint",
                 "pl": "Wsparcie dla bramki zaimplementowane jest zmiana eslint",
-                "zh-cn": "支持执行的门箱、更替场"
+                "zh-cn": "支持执行的门箱、更替场",
+                "uk": "Реалізована підтримка шлюзу, зміна eslint"
             },
             "1.0.0": {
                 "en": "Release for official repository, small changes due to code review",
@@ -51,7 +52,8 @@
                 "it": "Rilascio per repository ufficiale, piccole modifiche dovute alla revisione del codice",
                 "es": "Lanzamiento para el repositorio oficial, pequeños cambios debido a la revisión del código.",
                 "pl": "Wydanie do oficjalnego repozytorium, drobne zmiany związane z przeglądem kodu",
-                "zh-cn": "发布官方存储库，由于代码审查的小改动"
+                "zh-cn": "发布官方存储库，由于代码审查的小改动",
+                "uk": "Випуск для офіційного репозиторію, невеликі зміни через перевірку коду"
             }
         },
         "titleLang": {
@@ -64,7 +66,8 @@
             "it": "Blebox",
             "es": "Blebox",
             "pl": "Blebox",
-            "zh-cn": "盲盒"
+            "zh-cn": "盲盒",
+            "uk": "Blebox"
         },
         "desc": {
             "en": "Adapter for blebox systems",
@@ -76,7 +79,8 @@
             "it": "Adattatore per sistemi blebox",
             "es": "Adaptador para sistemas blebox",
             "pl": "Adapter do systemów blebox",
-            "zh-cn": "blebox系统适配器"
+            "zh-cn": "blebox系统适配器",
+            "uk": "Адаптер для систем blebox"
         },
         "authors": [
             "Kai van Nuis <kai@vannuis.de>"
