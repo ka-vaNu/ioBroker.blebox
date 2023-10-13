@@ -89,6 +89,10 @@
                             "value": "tempsensor"
                         },
                         {
+                            "label": "multisensor",
+                            "value": "multisensor"
+                        },
+                        {
                             "label": "tvlift",
                             "value": "tvlift"
                         }
