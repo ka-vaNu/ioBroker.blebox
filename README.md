@@ -30,6 +30,10 @@ Aktuell werden folgende Geräte unterstützt:
     ### **WORK IN PROGRESS**
 -->
 
+### 2.1.0 (2023-10-13)
+
+* (Kai van Nuis) Support for multiSensor
+
 ### 2.0.1 (2023-03-12)
 
 * (Kai van Nuis) Update dependecies
