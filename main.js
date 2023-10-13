@@ -9,6 +9,7 @@ const gatebox = require("./lib/gatebox");
 const shutterbox = require("./lib/shutterbox");
 const switchbox = require("./lib/switchbox");
 const tempsensor = require("./lib/tempsensor");
+const multisensor = require("./lib/multisensor");
 const saunabox = require("./lib/saunabox");
 const tvlift = require("./lib/tvlift");
 
@@ -97,6 +98,15 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, "tempsensorExtendedState");
                         schedule.scheduleJob("*/10 * * * * *", function () {
                             tools.getBleboxData(device, "tempsensorExtendedState");
+                            tools.getBleboxData(device, "deviceUptime");
+                        });
+                        break;
+                    case "multisensor":
+                        multisensor.init();
+                        tools.getBleboxData(device, "deviceState");
+                        tools.getBleboxData(device, "multisensorExtendedState");
+                        schedule.scheduleJob("*/10 * * * * *", function () {
+                            tools.getBleboxData(device, "multisensorExtendedState");
                             tools.getBleboxData(device, "deviceUptime");
                         });
                         break;
@@ -425,6 +435,9 @@ class Blebox extends utils.Adapter {
             case "tempsensor":
                 locationUrl = tempsensor.getApiUrl(type, val);
                 break;
+            case "multisensor":
+                locationUrl = multisensor.getApiUrl(type, val);
+                break;
 
             default:
                 break;
@@ -452,6 +465,8 @@ class Blebox extends utils.Adapter {
                 return switchbox.datapoints;
             case "tempsensor":
                 return tempsensor.datapoints;
+            case "multisensor":
+                return multisensor.datapoints;
             case "saunabox":
                 return saunabox.datapoints;
             default:

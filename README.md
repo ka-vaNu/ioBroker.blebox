@@ -21,6 +21,7 @@ Aktuell werden folgende Geräte unterstützt:
 * tempsensor
 * gatebox
 * tvlift
+* multisensor - nicht mit realer Hardware getestet, es werden bis zu 4 Sensoren unterstützt
 
 ## Changelog
 
