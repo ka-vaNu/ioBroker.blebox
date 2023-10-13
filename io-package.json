@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "blebox",
-        "version": "2.0.1",
+        "version": "2.1.0",
         "news": {
+            "2.1.0": {
+                "en": "multiSensor is now supported",
+                "de": "multiSensor wird unterstützt",
+                "ru": "multiSensor теперь поддерживается",
+                "pt": "multiSensor agora é suportado",
+                "nl": "vermenigvuldig is nu ondersteund",
+                "fr": "multiSensor est maintenant supporté",
+                "it": "multiSensor è ora supportato",
+                "es": "multiSensor ahora es compatible",
+                "pl": "obecnie jest wspierany przez multisensor",
+                "uk": "мультисенсор тепер підтримується",
+                "zh-cn": "现正在支持多管教机构。"
+            },
             "2.0.1": {
                 "en": "Update dependencies",
                 "de": "Abhängigkeiten aktualisieren",
