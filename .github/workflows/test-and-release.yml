@@ -3,6 +3,7 @@ name: Test and Release
 # Run this job on all pushes and pull requests
 # as well as tags with a semantic version
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - "main"
@@ -40,7 +41,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x, 20.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
