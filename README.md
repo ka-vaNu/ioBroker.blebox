@@ -9,11 +9,11 @@
 
 ## blebox adapter for ioBroker
 
-Adapter für Bleboxsysteme. Details zu den Produkten [Blebox](https://blebox.eu/). Die Implementierung hat ohne Unterstützung des Herstellers stattgefunden. 
+Adapter for controlling the Smarthome devices of the manufacturer [blebox](https://blebox.eu/). The API description can be found [here](https://technical.blebox.eu/). The implementation has taken place without the support of the manufacturer.
 
-Eine unvollständige und veraltete API-Simulation kann [hier](https://github.com/blebox/blebox-virtual-devices) heruntergeladen werden.
+An incomplete and outdated API simulation can be downloaded [here](https://github.com/blebox/blebox-virtual-devices).
 
-Aktuell werden folgende Geräte unterstützt:
+The following devices are currently supported:
 
 * shutterbox
 * switchbox
@@ -21,7 +21,7 @@ Aktuell werden folgende Geräte unterstützt:
 * tempsensor
 * gatebox
 * tvlift
-* multisensor - nicht mit realer Hardware getestet, es werden bis zu 4 Sensoren unterstützt
+* multisensor - not tested with real hardware, up to 4 sensors are supported
 
 ## Changelog
 
@@ -44,15 +44,14 @@ Aktuell werden folgende Geräte unterstützt:
 
 ### 1.1.0
 
-* Support für gateBox implementiert und eslint umgestellt
+* Support for gateBox implemented and eslint converted
 
 ### 0.1.2
 
-* Fixes aufgrund Codereview
-
+* Fixes due to code review
 ### 0.1.1
 
-* Erstes Stable-Release
+* First stable release
 
 ## License
 MIT License
