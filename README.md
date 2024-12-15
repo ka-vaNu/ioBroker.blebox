@@ -16,12 +16,26 @@ An incomplete and outdated API simulation can be downloaded [here](https://githu
 The following devices are currently supported:
 
 * shutterbox
+* shutterBoxDC
+* shutterBoxDIN 
 * switchbox
+* switchBox
+* switchBoxD
+* switchBoxDC
+* switchBox DIN
+* switchBoxD DIN
+* switchBoxT PRO
 * saunabox
 * tempsensor
 * gatebox
 * tvlift
-* multisensor - not tested with real hardware, up to 4 sensors are supported
+* multisensor - up to 4 sensors per device are supported
+  * tempSensor PRO
+  * tempSensorAC 
+  * humiditySensor
+  * windSensor PRO
+  * floodSensor
+  * rainSensor 
 
 ## Changelog
 
