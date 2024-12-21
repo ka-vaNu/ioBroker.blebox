@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use strict';
 
 const utils = require('@iobroker/adapter-core');
@@ -151,7 +150,7 @@ class Blebox extends utils.Adapter {
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
-     * @param callback
+     * @param callback  function to callback
      */
     onUnload(callback) {
         this.log.info('Shutting down...');
@@ -160,6 +159,7 @@ class Blebox extends utils.Adapter {
             this.log.info('All Jobs shutted down...');
             callback();
         } catch (e) {
+            this.log.error(`onUnload: ${JSON.stringify(e)}`);
             callback();
         }
     }
@@ -167,8 +167,8 @@ class Blebox extends utils.Adapter {
     /**
      * Is called if a subscribed object changes
      *
-     * @param id
-     * @param obj
+     * @param id        id of the change object
+     * @param obj       the object itself
      */
     onObjectChange(id, obj) {
         this.log.info('onObjectChange');
@@ -211,8 +211,8 @@ class Blebox extends utils.Adapter {
     /**
      * Is called if a subscribed state changes
      *
-     * @param id
-     * @param state
+     * @param id        id of the subscribed object
+     * @param state     the current state
      */
     async onStateChange(id, state) {
         this.log.info('onStateChange');
@@ -335,7 +335,7 @@ class Blebox extends utils.Adapter {
                                 response['command.position'] = '';
                                 await tools.setIobStates(response);
                                 tools.getBleboxData(device, 'shutterExtendedState');
-
+                                // eslint-disable-next-line
                                 shutterboxRefreshJob = schedule.scheduleJob(
                                     {
                                         start: new Date(Date.now() + 1000),
@@ -381,7 +381,7 @@ class Blebox extends utils.Adapter {
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
                                     tools.getBleboxData(device, 'tvliftExtendedState');
-
+                                    // eslint-disable-next-line
                                     tvliftRefreshJob = schedule.scheduleJob(
                                         {
                                             start: new Date(Date.now() + 1000),
@@ -416,7 +416,7 @@ class Blebox extends utils.Adapter {
                             response['command.setRelayForTime'] = '';
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, 'switchState');
-
+                            // eslint-disable-next-line
                             switchboxRefreshJob = schedule.scheduleJob(
                                 {
                                     start: new Date(Date.now() + 1000),
@@ -496,7 +496,7 @@ class Blebox extends utils.Adapter {
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
                                     tools.getBleboxData(device, 'gateExtendedState');
-
+                                    // eslint-disable-next-line
                                     gateboxRefreshJob = schedule.scheduleJob(
                                         {
                                             start: new Date(Date.now() + 1000),
@@ -539,9 +539,9 @@ class Blebox extends utils.Adapter {
 
     /**
      *
-     * @param device
-     * @param type apiPart to GET data from
-     * @param val
+     * @param device    device to get data from
+     * @param type      apiPart to GET data from
+     * @param val       data which is needed to build the request e.g. percentage to open shutter
      */
     async getSimpleObject(device, type, val) {
         let values = {};
@@ -584,7 +584,7 @@ class Blebox extends utils.Adapter {
     /**
      *
      * @param type Type of device to get Datapoints from
-     * @returns
+     * @returns array of datapoints
      */
     getDatapoints(type) {
         switch (type) {
@@ -609,11 +609,11 @@ class Blebox extends utils.Adapter {
     }
 }
 
-// @ts-ignore parent is a valid property on module
+// @ts-expect-error parent is a valid property on module
 if (module.parent) {
     // Export the constructor in compact mode
     /**
-     * @param [options]
+     * @param options   options for the constructor
      */
     module.exports = options => new Blebox(options);
 } else {
