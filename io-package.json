@@ -3,6 +3,19 @@
         "name": "blebox",
         "version": "2.1.0",
         "news": {
+            "2.2.0": {
+                "en": "Support for multi-device APIs",
+                "de": "Unterstützung für Multi-Device APIs",
+                "ru": "Поддержка многоустройства API",
+                "pt": "Suporte para multidispositivo APIs",
+                "nl": "Ondersteuning voor multi-apparaat API's",
+                "fr": "Soutien pour multi-appareils API",
+                "it": "Supporto per multidispositivo API",
+                "es": "Apoyo para múltiples dispositivos API",
+                "pl": "Wsparcie dla urządzeń wielofunkcyjnych API",
+                "uk": "Підтримка багатопристосувань Контакти",
+                "zh-cn": "支持多设备 APIs 图像"
+            },
             "2.1.0": {
                 "en": "multiSensor is now supported",
                 "de": "multiSensor wird unterstützt",
