@@ -101,18 +101,20 @@
         "keywords": [
             "blebox"
         ],
-        "license": "MIT",
+        "licenseInformation": {
+            "license": "MIT",
+            "type": "free"
+          },
         "platform": "Javascript/Node.js",
-        "main": "main.js",
         "icon": "blebox.png",
         "enabled": true,
+        "tier": 1,
         "extIcon": "https://raw.githubusercontent.com/ka-vaNu/ioBroker.blebox/master/admin/blebox.png",
         "readme": "https://github.com/ka-vaNu/ioBroker.blebox/blob/master/README.md",
         "loglevel": "info",
         "mode": "daemon",
         "type": "iot-systems",
         "compact": true,
-        "materialize": true,
         "connectionType": "local",
         "dataSource": "poll",
         "adminUI": {
