@@ -1,6 +1,0 @@
-# exclude all dot-files and directories
-.*
-
-test/
-.travis.yml
-tsconfig.json
