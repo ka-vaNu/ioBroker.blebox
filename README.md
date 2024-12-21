@@ -15,27 +15,32 @@ An incomplete and outdated API simulation can be downloaded [here](https://githu
 
 The following devices are currently supported:
 
-* shutterbox
-* shutterBoxDC
-* shutterBoxDIN 
-* switchbox
-* switchBox
-* switchBoxD
-* switchBoxDC
-* switchBox DIN
-* switchBoxD DIN
-* switchBoxT PRO
-* saunabox
-* tempsensor
-* gatebox
-* tvlift
-* multisensor - up to 4 sensors per device are supported
-  * tempSensor PRO
-  * tempSensorAC 
-  * humiditySensor
-  * windSensor PRO
-  * floodSensor
-  * rainSensor 
+
+
+| Gerät                | API-Type            | Status                                   |
+|----------------------|---------------------|-----------------------------------------|
+| gatebox              | gatebox             | ✅ Tested                                |
+| multisensor          | multisensor         | up to 4 sensors per device are supported |
+| tempSensor PRO       | multisensor         | ❓ beta, not tested with real Hardware   |
+| tempSensorAC         | multisensor         | ❓ beta, not tested with real Hardware   |
+| humiditySensor       | multisensor         | ❓ beta, not tested with real Hardware   |
+| windSensor PRO       | multisensor         | ❓ beta, not tested with real Hardware   |
+| floodSensor          | multisensor         | ❓ beta, not tested with real Hardware   |
+| rainSensor           | multisensor         | ❓ beta, not tested with real Hardware   |
+| saunabox             | saunabox            | ❓ beta, not tested with real Hardware   |
+| shutterbox           | shutterbox          | ✅ Tested                                |
+| shutterBoxDC         | shutterBox          | ❓ beta, not tested with real Hardware   |
+| shutterBoxDIN        | shutterBox          | ❓ beta, not tested with real Hardware   |
+| switchbox            | switchbox           | ✅ Tested                                |
+| switchBoxD           | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBoxDC          | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBox DIN        | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBoxD DIN       | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBoxT PRO       | switchBox           | ❓ beta, not tested with real Hardware   |
+| tempsensor           | tempsensor          | ❓ beta, not tested with real Hardware   |
+| tvlift               | tvlift              | ❓ beta, not tested with real Hardware   |
+
+
 
 ## Changelog
 
@@ -43,6 +48,10 @@ The following devices are currently supported:
     Placeholder for the next version:
     ### **WORK IN PROGRESS**
 -->
+
+### 2.2.0 (2023-10-13)
+
+* (Kai van Nuis) Support for multi-device APIs
 
 ### 2.1.0 (2023-10-13)
 

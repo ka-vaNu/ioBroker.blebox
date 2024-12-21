@@ -85,7 +85,35 @@
                             "value": "gatebox"
                         },
                         {
-                            "label": "saunabox",
+                            "label": "multisensor [beta]",
+                            "value": "multisensor"
+                        },
+                        {
+                            "label": "tempSensor PRO [beta]",
+                            "value": "tempSensor_PRO"
+                        },
+                        {
+                            "label": "tempSensorAC [beta]",
+                            "value": "tempSensorAC"
+                        },
+                        {
+                            "label": "humiditySensor [beta]",
+                            "value": "humiditySensor"
+                        },
+                        {
+                            "label": "windSensor PRO [beta]",
+                            "value": "windSensor_PRO"
+                        },
+                        {
+                            "label": "rainSensor [beta]",
+                            "value": "rainSensor"
+                        },
+                        {
+                            "label": "floodSensor [beta]",
+                            "value": "floodSensor"
+                        },
+                        {
+                            "label": "saunabox [beta]",
                             "value": "saunabox"
                         },
                         {
@@ -93,23 +121,43 @@
                             "value": "shutterbox"
                         },
                         {
-                            "label": "shutterboxDC",
+                            "label": "shutterboxDC [beta]",
                             "value": "shutterboxDC"
+                        },
+                        {
+                            "label": "shutterboxDIN [beta]",
+                            "value": "shutterboxDIN"
                         },
                         {
                             "label": "switchbox",
                             "value": "switchbox"
                         },
                         {
-                            "label": "tempsensor",
+                            "label": "switchBoxD [beta]",
+                            "value": "switchBoxD"
+                        },
+                        {
+                            "label": "switchBoxDC [beta]",
+                            "value": "switchBoxDC"
+                        },
+                        {
+                            "label": "switchBox DIN [beta]",
+                            "value": "switchBox_DIN"
+                        },
+                        {
+                            "label": "switchBoxD DIN [beta]",
+                            "value": "switchBoxD_DIN"
+                        },
+                        {
+                            "label": "switchBoxT PRO [beta]",
+                            "value": "switchBoxT_PRO"
+                        },
+                        {
+                            "label": "tempsensor [beta]",
                             "value": "tempsensor"
                         },
                         {
-                            "label": "multisensor",
-                            "value": "multisensor"
-                        },
-                        {
-                            "label": "tvlift",
+                            "label": "tvlift [beta]",
                             "value": "tvlift"
                         }
                     ]
