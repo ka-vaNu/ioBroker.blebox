@@ -5,7 +5,8 @@
         "extLog": {
             "type": "checkbox",
             "label": "Extended logging",
-            "newLine": true
+            "newLine": true,
+            "size": "md"
         },
         "divider": {
             "type": "divider"
@@ -13,6 +14,7 @@
         "devices": {
             "type": "table",
             "label": "Devices",
+            "size": "md",
             "items": [
                 {
                     "type": "text",
@@ -79,6 +81,10 @@
                         {
                             "label": "shutterbox",
                             "value": "shutterbox"
+                        },
+                        {
+                            "label": "shutterboxDC",
+                            "value": "shutterboxDC"
                         },
                         {
                             "label": "switchbox",

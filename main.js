@@ -3,6 +3,8 @@
 
 const utils = require("@iobroker/adapter-core");
 
+let apiMapping = {};
+
 const tools = require("./lib/tools");
 const schedule = require("node-schedule");
 const gatebox = require("./lib/gatebox");
@@ -12,6 +14,18 @@ const tempsensor = require("./lib/tempsensor");
 const multisensor = require("./lib/multisensor");
 const saunabox = require("./lib/saunabox");
 const tvlift = require("./lib/tvlift");
+
+addSupportedAPI(gatebox.getDeviceTypeMapping());
+addSupportedAPI(shutterbox.getDeviceTypeMapping());
+addSupportedAPI(switchbox.getDeviceTypeMapping());
+addSupportedAPI(tempsensor.getDeviceTypeMapping());
+addSupportedAPI(multisensor.getDeviceTypeMapping());
+addSupportedAPI(saunabox.getDeviceTypeMapping());
+addSupportedAPI(tvlift.getDeviceTypeMapping());
+
+function addSupportedAPI (api) {
+    apiMapping = Object.assign({}, apiMapping, api);
+}
 
 class Blebox extends utils.Adapter {
     /**
@@ -38,6 +52,7 @@ class Blebox extends utils.Adapter {
          */
     async onReady () {
         if (this.extLog) this.log.info("Full config: " + JSON.stringify(this.config));
+        if (this.extLog) this.log.info("Full mapping: " + JSON.stringify(this.apiMapping));
         if (Object.prototype.hasOwnProperty.call(this.config, "devices")) {
             this.extLog = this.config.extLog;
             this.config.devices.forEach(device => {
@@ -47,9 +62,11 @@ class Blebox extends utils.Adapter {
                 this.log.info("device type: " + device.dev_type);
                 this.log.info("device ip: " + device.dev_ip);
                 this.log.info("device port: " + device.dev_port);
-                tools.initCommon(device.dev_name, device.dev_type);
+                device.api_type = apiMapping[device.dev_type];
+                this.log.info("device api: " + device.dev_type + " => " + device.api_type);
+                tools.initCommon(device.dev_name, device.api_type);
                 tools.getBleboxData(device, "deviceUptime");
-                switch (device.dev_type) {
+                switch (device.api_type) {
                     case "shutterbox":
                         shutterbox.init();
                         tools.getBleboxData(device, "settingsState");
@@ -184,7 +201,7 @@ class Blebox extends utils.Adapter {
         this.log.info("onStateChange");
         const name = id.split(".")[2];
         const device = this.getDeviceByName(name);
-        const lDatapoint = this.datapoints[device.dev_type + "#" + name];
+        const lDatapoint = this.datapoints[device.api_type + "#" + name];
         // if (this.extLog)
         this.log.info(`onStateChange state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
         if (this.extLog) this.log.info("onStateChange datapoint : " + JSON.stringify(lDatapoint));
@@ -192,7 +209,7 @@ class Blebox extends utils.Adapter {
         if (state.ack === false) {
             let response = {};
             // The state was changed
-            switch (device.dev_type) {
+            switch (device.api_type) {
                 case "shutterbox":
                     // eslint-disable-next-line no-case-declarations
                     let shutterboxRefreshJob = {};
@@ -416,7 +433,7 @@ class Blebox extends utils.Adapter {
         let values = {};
         let locationUrl = "";
         // General
-        switch (device.dev_type) {
+        switch (device.api_type) {
             case "gatebox":
                 locationUrl = gatebox.getApiUrl(type, val);
                 break;
