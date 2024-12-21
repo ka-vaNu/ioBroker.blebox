@@ -6,7 +6,12 @@
             "type": "checkbox",
             "label": "Extended logging",
             "newLine": true,
-            "size": "md"
+            "size": 2,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
         },
         "divider": {
             "type": "divider"
@@ -14,7 +19,12 @@
         "devices": {
             "type": "table",
             "label": "Devices",
-            "size": "md",
+            "size": 2,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12,
             "items": [
                 {
                     "type": "text",
