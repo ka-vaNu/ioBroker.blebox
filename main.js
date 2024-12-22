@@ -75,10 +75,18 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'shutterExtendedState');
-                        schedule.scheduleJob('*/10 * * * *', function () {
-                            tools.getBleboxData(device, 'deviceUptime');
-                            tools.getBleboxData(device, 'shutterExtendedState');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'shutterExtendedState')
+                                    .then(data => this.log.info('shutterExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei shutterExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'tvlift':
@@ -86,19 +94,32 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'deviceNetwork');
                         tools.getBleboxData(device, 'tvliftExtendedState');
-                        schedule.scheduleJob('*/10 * * * *', function () {
-                            tools.getBleboxData(device, 'deviceUptime');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                            }, device.polling * 1000);
+                        }
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'gatebox':
                         gatebox.init();
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
-                        schedule.scheduleJob('*/10 * * * * *', function () {
-                            tools.getBleboxData(device, 'deviceUptime');
-                            tools.getBleboxData(device, 'gateExtendedState');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'gateExtendedState')
+                                    .then(data => this.log.info('gateExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei gateExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'switchbox':
@@ -106,39 +127,71 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'switchExtendedState');
-                        schedule.scheduleJob('*/10 * * * *', function () {
-                            tools.getBleboxData(device, 'deviceUptime');
-                            tools.getBleboxData(device, 'switchExtendedState');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'switchExtendedState')
+                                    .then(data => this.log.info('switchExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei switchExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'tempsensor':
                         tempsensor.init();
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'tempsensorExtendedState');
-                        schedule.scheduleJob('*/10 * * * * *', function () {
-                            tools.getBleboxData(device, 'tempsensorExtendedState');
-                            tools.getBleboxData(device, 'deviceUptime');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'tempsensorExtendedState')
+                                    .then(data => this.log.info('tempsensorExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei tempsensorExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         break;
                     case 'multisensor':
                         multisensor.init();
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'multisensorExtendedState');
-                        schedule.scheduleJob('*/10 * * * * *', function () {
-                            tools.getBleboxData(device, 'multisensorExtendedState');
-                            tools.getBleboxData(device, 'deviceUptime');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'multisensorExtendedState')
+                                    .then(data => this.log.info('multisensorExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei multisensorExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         break;
                     case 'saunabox':
                         saunabox.init();
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'saunaboxExtendedState');
                         this.subscribeStates(`${device.dev_name}.command.*`);
-                        schedule.scheduleJob('*/30 * * * * *', function () {
-                            tools.getBleboxData(device, 'saunaboxExtendedState');
-                            tools.getBleboxData(device, 'deviceUptime');
-                        });
+                        if (device.polling > 0) {
+                            setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'saunaboxExtendedState')
+                                    .then(data => this.log.info('saunaboxExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei saunaboxExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
                         break;
                     default:
                         break;
