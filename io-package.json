@@ -117,7 +117,7 @@
         "licenseInformation": {
             "license": "MIT",
             "type": "free"
-          },
+        },
         "platform": "Javascript/Node.js",
         "icon": "blebox.png",
         "enabled": true,
