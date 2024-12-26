@@ -300,6 +300,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'shutterSendDown', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'shutterExtendedState');
                                     shutterboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -317,6 +318,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'shutterSendUp', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'shutterExtendedState');
                                     shutterboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -334,6 +336,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'shutterSendStop', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'shutterExtendedState');
                                     shutterboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -354,6 +357,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, 'shutterTilt', state.val);
                                 response['command.tilt'] = '';
                                 await tools.setIobStates(response);
+                                this.setState(id, state, true);
                                 tools.getBleboxData(device, 'shutterExtendedState');
                                 shutterboxRefreshJob = schedule.scheduleJob(
                                     {
@@ -373,6 +377,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, 'shutterFavorite', state.val);
                                 response['command.favorite'] = '';
                                 await tools.setIobStates(response);
+                                this.setState(id, state, true);
                                 tools.getBleboxData(device, 'shutterExtendedState');
                                 shutterboxRefreshJob = schedule.scheduleJob(
                                     {
@@ -392,6 +397,7 @@ class Blebox extends utils.Adapter {
                                 response = await this.getSimpleObject(device, 'shutterPosition', state.val);
                                 response['command.position'] = '';
                                 await tools.setIobStates(response);
+                                this.setState(id, state, true);
                                 tools.getBleboxData(device, 'shutterExtendedState');
                                 // eslint-disable-next-line
                                 shutterboxRefreshJob = schedule.scheduleJob(
@@ -421,6 +427,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'tvliftSendDown', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'tvliftExtendedState');
                                     tvliftRefreshJob = schedule.scheduleJob(
                                         {
@@ -438,6 +445,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'tvliftSendUp', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'tvliftExtendedState');
                                     // eslint-disable-next-line
                                     tvliftRefreshJob = schedule.scheduleJob(
@@ -466,6 +474,7 @@ class Blebox extends utils.Adapter {
                             response = await this.getSimpleObject(device, 'switchSetRelay', state.val);
                             response['command.relay'] = '';
                             await tools.setIobStates(response);
+                            this.setState(id, state, true);
                             tools.getBleboxData(device, 'switchState');
                             break;
                         case `${this.namespace}.${name}.command.setRelayForTime`:
@@ -473,6 +482,7 @@ class Blebox extends utils.Adapter {
                             response = await this.getSimpleObject(device, 'switchSetRelayForTime', state.val);
                             response['command.setRelayForTime'] = '';
                             await tools.setIobStates(response);
+                            this.setState(id, state, true);
                             tools.getBleboxData(device, 'switchState');
                             // eslint-disable-next-line
                             switchboxRefreshJob = schedule.scheduleJob(
@@ -502,6 +512,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'gatePrimary', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'gateExtendedState');
                                     gateboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -519,6 +530,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'gateSecondary', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'gateExtendedState');
                                     gateboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -536,6 +548,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'gateOpen', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'gateExtendedState');
                                     gateboxRefreshJob = schedule.scheduleJob(
                                         {
@@ -553,6 +566,7 @@ class Blebox extends utils.Adapter {
                                     response = await this.getSimpleObject(device, 'gateClose', null);
                                     response['command.move'] = '';
                                     await tools.setIobStates(response);
+                                    this.setState(id, state, true);
                                     tools.getBleboxData(device, 'gateExtendedState');
                                     // eslint-disable-next-line
                                     gateboxRefreshJob = schedule.scheduleJob(
@@ -578,6 +592,7 @@ class Blebox extends utils.Adapter {
                             this.log.info(`set heat to ${state.val}`);
                             response = await this.getSimpleObject(device, 'saunaboxSetHeat', state.val);
                             response['command.state'] = '';
+                            this.setState(id, state, true);
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, 'saunaboxExtendedState');
 
@@ -586,6 +601,7 @@ class Blebox extends utils.Adapter {
                             this.log.info(`set relayForTime to ${state.val}`);
                             response = await this.getSimpleObject(device, 'saunaboxSetdesiredTemp', state.val * 100);
                             response['command.desiredTemp'] = '';
+                            this.setState(id, state, true);
                             await tools.setIobStates(response);
                             tools.getBleboxData(device, 'saunaboxExtendedState');
 
@@ -637,33 +653,6 @@ class Blebox extends utils.Adapter {
         }
         values = await tools.simpleObjectUrlGetter(device, locationUrl);
         return values;
-    }
-
-    /**
-     *
-     * @param type Type of device to get Datapoints from
-     * @returns array of datapoints
-     */
-    getDatapoints(type) {
-        switch (type) {
-            case 'gatebox':
-                return gatebox.datapoints;
-            case 'shutterbox':
-                return shutterbox.datapoints;
-            case 'tvlift':
-                return tvlift.datapoints;
-            case 'switchbox':
-                return switchbox.datapoints;
-            case 'tempsensor':
-                return tempsensor.datapoints;
-            case 'multisensor':
-                return multisensor.datapoints;
-            case 'saunabox':
-                return saunabox.datapoints;
-            default:
-                break;
-        }
-        return false;
     }
 }
 
