@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "blebox",
-        "version": "2.2.0",
+        "version": "2.2.1",
         "news": {
+            "2.2.1": {
+                "en": "SensorID is now a number, attributes are now searched for case-insensitively",
+                "de": "SensorID ist jetzt eine Zahl, Attribute werden nun nach case-insensitively gesucht",
+                "ru": "SensorID теперь число, атрибуты теперь ищут случай-нечувствительно",
+                "pt": "SensorID é agora um número, atributos são agora procurados por caso-insensível",
+                "nl": "SensorID is nu een getal, attributen worden nu ongevoelig gezocht naar hoofdletter",
+                "fr": "SensorID est maintenant un nombre, les attributs sont maintenant recherchés insensiblement aux cas",
+                "it": "SensorID è ora un numero, gli attributi sono ora ricercati per caso-insensibile",
+                "es": "SensorID es ahora un número, ahora se buscan atributos para caso-insensiblemente",
+                "pl": "SensorID jest teraz liczbą, atrybuty są teraz przeszukiwane w poszukiwaniu przypadków niewrażliwości",
+                "uk": "SensorID тепер є числом, атрибути тепер шукають випадаючі",
+                "zh-cn": "传感器ID现在是数字, 属性现在被搜索到大小写不敏感"
+              },
             "2.2.0": {
                 "en": "Support for multi-device APIs",
                 "de": "Unterstützung für Multi-Device APIs",
