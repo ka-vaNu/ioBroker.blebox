@@ -76,7 +76,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'shutterExtendedState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -95,7 +95,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceNetwork');
                         tools.getBleboxData(device, 'tvliftExtendedState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -109,7 +109,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -128,7 +128,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'switchExtendedState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -146,7 +146,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'tempsensorExtendedState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -163,7 +163,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'multisensorExtendedState');
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -181,7 +181,7 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'saunaboxExtendedState');
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         if (device.polling > 0) {
-                            setInterval(() => {
+                            device.intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
                                     .then(data => this.log.info('deviceUptime:', data))
@@ -207,6 +207,11 @@ class Blebox extends utils.Adapter {
      */
     onUnload(callback) {
         this.log.info('Shutting down...');
+        for (const device of this.config.devices) {
+            if (device.polling > 0) {
+                clearInterval(device.intervall);
+            }
+        }
         try {
             schedule.gracefulShutdown();
             this.log.info('All Jobs shutted down...');
