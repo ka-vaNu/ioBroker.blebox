@@ -34,11 +34,11 @@ The following devices are currently supported:
 | shutterBoxDC         | shutterBox          | ❓ beta, not tested with real Hardware   |
 | shutterBoxDIN        | shutterBox          | ❓ beta, not tested with real Hardware   |
 | switchbox            | switchbox           | ✅ Tested                                |
-| switchBoxD           | switchBox           | ❓ beta, not tested with real Hardware   |
-| switchBoxDC          | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBoxD           | switchBoxD          | ❓ beta, not tested with real Hardware   |
+| switchBoxDC          | switchBoxD          | ❓ beta, not tested with real Hardware   |
 | switchBox DIN        | switchBox           | ❓ beta, not tested with real Hardware   |
-| switchBoxD DIN       | switchBox           | ❓ beta, not tested with real Hardware   |
-| switchBoxT PRO       | switchBox           | ❓ beta, not tested with real Hardware   |
+| switchBoxD DIN       | switchBoxD          | ❓ beta, not tested with real Hardware   |
+| switchBoxT PRO       | switchBoxD          | ❓ beta, not tested with real Hardware   |
 | tempsensor           | tempsensor          | ❓ beta, not tested with real Hardware   |
 | tvlift               | tvlift              | ❓ beta, not tested with real Hardware   |
 
