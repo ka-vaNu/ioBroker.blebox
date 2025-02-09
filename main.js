@@ -323,7 +323,7 @@ class Blebox extends utils.Adapter {
         const name = id.split('.')[2];
         const device = this.getDeviceByName(name);
         this.log.info(`onStateChange id: ${id} state: ${state.val} name: ${name} api_type: ${device.api_type}`);
-        const lDatapoint = this.datapoints[device.api_type];
+        const lDatapoint = this.datapoints[device.dev_type];
         this.log.info(
             `onStateChange state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name} api_type: ${device.api_type}`,
         );
@@ -620,6 +620,7 @@ class Blebox extends utils.Adapter {
                         case `${this.namespace}.${name}.command.forceMeasurement`:
                             this.log.info(`force measurement of airsensor`);
                             response = await this.getSimpleObject(device, 'forceMeasurement', state.val);
+                            this.log.info(`forceMeasurement of airsensor, response: ${JSON.stringify(response)}`);
                             response['command.forceMeasurement'] = '0';
                             await tools.setIobStates(response);
                             break;
