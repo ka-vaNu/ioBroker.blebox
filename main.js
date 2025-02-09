@@ -9,6 +9,7 @@ const schedule = require('node-schedule');
 const gatebox = require('./lib/gatebox');
 const shutterbox = require('./lib/shutterbox');
 const switchbox = require('./lib/switchbox');
+const switchboxD = require('./lib/switchboxD');
 const tempsensor = require('./lib/tempsensor');
 const multisensor = require('./lib/multisensor');
 const saunabox = require('./lib/saunabox');
@@ -17,6 +18,7 @@ const tvlift = require('./lib/tvlift');
 addSupportedAPI(gatebox.getDeviceTypeMapping());
 addSupportedAPI(shutterbox.getDeviceTypeMapping());
 addSupportedAPI(switchbox.getDeviceTypeMapping());
+addSupportedAPI(switchboxD.getDeviceTypeMapping());
 addSupportedAPI(tempsensor.getDeviceTypeMapping());
 addSupportedAPI(multisensor.getDeviceTypeMapping());
 addSupportedAPI(saunabox.getDeviceTypeMapping());
@@ -54,7 +56,7 @@ class Blebox extends utils.Adapter {
             this.log.info(`Full config: ${JSON.stringify(this.config)}`);
         }
         if (this.extLog) {
-            this.log.info(`Full mapping: ${JSON.stringify(this.apiMapping)}`);
+            this.log.info(`Full mapping: ${JSON.stringify(apiMapping)}`);
         }
         if (Object.prototype.hasOwnProperty.call(this.config, 'devices')) {
             this.extLog = this.config.extLog;
@@ -123,6 +125,7 @@ class Blebox extends utils.Adapter {
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'switchbox':
+                        this.log.info(`device api: ${device.dev_type} => ${device.api_type}`);
                         switchbox.init();
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
@@ -140,6 +143,29 @@ class Blebox extends utils.Adapter {
                             }, device.polling * 1000);
                         }
                         this.subscribeStates(`${device.dev_name}.command.*`);
+                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
+                        break;
+                    case 'switchboxD':
+                        switchboxD.init();
+                        tools.getBleboxData(device, 'settingsState');
+                        tools.getBleboxData(device, 'deviceState');
+                        tools.getBleboxData(device, 'switchExtendedState');
+                        if (device.polling > 0) {
+                            device.intervall = setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', JSON.stringify(data)))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'switchExtendedState')
+                                    .then(data => this.log.info('switchExtendedState:', JSON.stringify(data)))
+                                    .catch(err =>
+                                        this.log.error('Fehler bei switchExtendedState:', JSON.stringify(err)),
+                                    );
+                            }, device.polling * 1000);
+                        }
+                        this.subscribeStates(`${device.dev_name}.command.*`);
+                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
                         break;
                     case 'tempsensor':
                         tempsensor.init();
@@ -250,15 +276,15 @@ class Blebox extends utils.Adapter {
     getDeviceByName(name) {
         let ret = {};
         if (this.extLog) {
-            this.log.info(`getDeviceByName # name : ${JSON.stringify(name)}`);
+            this.log.info(`getDeviceByName # name : ${name}`);
         }
         this.config.devices.forEach(device => {
             if (this.extLog) {
-                this.log.info(`getDeviceByName # device : ${JSON.stringify(device)}`);
+                this.log.info(`getDeviceByName # device : ${device.dev_name}`);
             }
             if (device.dev_name === name) {
                 if (this.extLog) {
-                    this.log.info(`getDeviceByName # return device : ${JSON.stringify(device)}`);
+                    this.log.info(`getDeviceByName # return device : ${device}`);
                 }
                 ret = device;
             }
@@ -273,7 +299,7 @@ class Blebox extends utils.Adapter {
      * @param state     the current state
      */
     async onStateChange(id, state) {
-        this.log.info('onStateChange');
+        this.log.info('onStateChange ${id} ${state}');
         const name = id.split('.')[2];
         const device = this.getDeviceByName(name);
         const lDatapoint = this.datapoints[`${device.api_type}#${name}`];
@@ -283,7 +309,7 @@ class Blebox extends utils.Adapter {
             this.log.info(`onStateChange datapoint : ${JSON.stringify(lDatapoint)}`);
         }
         if (this.extLog) {
-            this.log.info(`onStateChange device : ${JSON.stringify(device)}`);
+            this.log.info(`onStateChange device : ${device}`);
         }
         if (state.ack === false) {
             let response = {};
@@ -501,6 +527,72 @@ class Blebox extends utils.Adapter {
                             break;
                     }
                     break;
+                case 'switchboxD':
+                    // eslint-disable-next-line no-case-declarations
+                    let switchboxDRefreshJob = {};
+                    switch (id) {
+                        case `${this.namespace}.${name}.command.relays`:
+                            this.log.info(`set all relays to ${state.val}`);
+                            response = await this.getSimpleObject(device, 'switchSetAllRelays', state.val);
+                            response['command.relays'] = '';
+                            await tools.setIobStates(response);
+                            tools.getBleboxData(device, 'switchState');
+                            break;
+                        case `${this.namespace}.${name}.command.0.relay`:
+                            this.log.info(`set relay 0 to ${state.val}`);
+                            response = await this.getSimpleObject(device, 'switchSetRelay0', state.val);
+                            response['command.0.relay'] = '';
+                            await tools.setIobStates(response);
+                            tools.getBleboxData(device, 'switchState');
+                            break;
+                        case `${this.namespace}.${name}.command.1.relay`:
+                            this.log.info(`set relay 1 to ${state.val}`);
+                            response = await this.getSimpleObject(device, 'switchSetRelay1', state.val);
+                            response['command.1.relay'] = '';
+                            await tools.setIobStates(response);
+                            tools.getBleboxData(device, 'switchState');
+                            break;
+                        case `${this.namespace}.${name}.command.0.setRelayForTime`:
+                            this.log.info(`set relay0ForTime to ${state.val}`);
+                            response = await this.getSimpleObject(device, 'switchSetRelay0ForTime', state.val);
+                            response['command.0.setRelayForTime'] = '';
+                            await tools.setIobStates(response);
+                            tools.getBleboxData(device, 'switchState');
+
+                            switchboxDRefreshJob = schedule.scheduleJob(
+                                {
+                                    start: new Date(Date.now() + 1000),
+                                    end: new Date(Date.now() + 1000 * state.val + 1000),
+                                    rule: '*/10 * * * * *',
+                                },
+                                function () {
+                                    tools.getBleboxData(device, 'switchState');
+                                },
+                            );
+                            break;
+                        case `${this.namespace}.${name}.command.1.setRelayForTime`:
+                            this.log.info(`set relay1ForTime to ${state.val}`);
+                            response = await this.getSimpleObject(device, 'switchSetRelay0ForTime', state.val);
+                            response['command.1.setRelayForTime'] = '';
+                            await tools.setIobStates(response);
+                            tools.getBleboxData(device, 'switchState');
+                            // eslint-disable-next-line
+                            switchboxDRefreshJob = schedule.scheduleJob(
+                                {
+                                    start: new Date(Date.now() + 1000),
+                                    end: new Date(Date.now() + 1000 * state.val + 1000),
+                                    rule: '*/10 * * * * *',
+                                },
+                                function () {
+                                    tools.getBleboxData(device, 'switchState');
+                                },
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
                 case 'gatebox':
                     // eslint-disable-next-line no-case-declarations
                     let gateboxRefreshJob = {};
@@ -631,6 +723,9 @@ class Blebox extends utils.Adapter {
             case 'switchbox':
                 locationUrl = switchbox.getApiUrl(type, val);
                 break;
+            case 'switchboxD':
+                locationUrl = switchboxD.getApiUrl(type, val);
+                break;
             case 'shutterbox':
                 locationUrl = shutterbox.getApiUrl(type, val);
                 break;
@@ -649,9 +744,13 @@ class Blebox extends utils.Adapter {
         }
 
         if (this.extLog) {
-            this.log.info(`getSimpleObject : ${type} URL: ${locationUrl} device: ${JSON.stringify(device)}`);
+            this.log.info(`getSimpleObject : ${type} URL: ${locationUrl} device: ${device}`);
         }
-        values = await tools.simpleObjectUrlGetter(device, locationUrl);
+        try {
+            values = await tools.simpleObjectUrlGetter(device, locationUrl);
+        } catch (error) {
+            this.log.error(`getSimpleObject : ${type} URL: ${locationUrl} device: ${device} error: ${error}`);
+        }
         return values;
     }
 }
