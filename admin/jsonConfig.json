@@ -92,6 +92,10 @@
                     "sort": true,
                     "options": [
                         {
+                            "label": "airsensor",
+                            "value": "airsensor"
+                        },
+                        {
                             "label": "gatebox",
                             "value": "gatebox"
                         },

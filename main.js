@@ -6,6 +6,7 @@ let apiMapping = {};
 
 const tools = require('./lib/tools');
 const schedule = require('node-schedule');
+const airsensor = require('./lib/airsensor');
 const gatebox = require('./lib/gatebox');
 const shutterbox = require('./lib/shutterbox');
 const switchbox = require('./lib/switchbox');
@@ -19,6 +20,7 @@ addSupportedAPI(gatebox.getDeviceTypeMapping());
 addSupportedAPI(shutterbox.getDeviceTypeMapping());
 addSupportedAPI(switchbox.getDeviceTypeMapping());
 addSupportedAPI(switchboxD.getDeviceTypeMapping());
+addSupportedAPI(airsensor.getDeviceTypeMapping());
 addSupportedAPI(tempsensor.getDeviceTypeMapping());
 addSupportedAPI(multisensor.getDeviceTypeMapping());
 addSupportedAPI(saunabox.getDeviceTypeMapping());
@@ -167,6 +169,25 @@ class Blebox extends utils.Adapter {
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
                         break;
+                    case 'airsensor':
+                        airsensor.init();
+                        tools.getBleboxData(device, 'deviceState');
+                        tools.getBleboxData(device, 'airsensorExtendedState');
+                        if (device.polling > 0) {
+                            device.intervall = setInterval(() => {
+                                tools
+                                    .getBleboxData(device, 'deviceUptime')
+                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .catch(err => this.log.error('Fehler bei deviceUptime:', err));
+                                tools
+                                    .getBleboxData(device, 'airsensorExtendedState')
+                                    .then(data => this.log.info('airsensorExtendedState:', data))
+                                    .catch(err => this.log.error('Fehler bei airsensorExtendedState:', err));
+                            }, device.polling * 1000);
+                        }
+                        this.subscribeStates(`${device.dev_name}.command.*`);
+                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
+                        break;
                     case 'tempsensor':
                         tempsensor.init();
                         tools.getBleboxData(device, 'deviceState');
@@ -299,12 +320,13 @@ class Blebox extends utils.Adapter {
      * @param state     the current state
      */
     async onStateChange(id, state) {
-        this.log.info('onStateChange ${id} ${state}');
         const name = id.split('.')[2];
         const device = this.getDeviceByName(name);
-        const lDatapoint = this.datapoints[`${device.api_type}#${name}`];
-        // if (this.extLog)
-        this.log.info(`onStateChange state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name}`);
+        this.log.info(`onStateChange id: ${id} state: ${state.val} name: ${name} api_type: ${device.api_type}`);
+        const lDatapoint = this.datapoints[device.dev_type];
+        this.log.info(
+            `onStateChange state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name} api_type: ${device.api_type}`,
+        );
         if (this.extLog) {
             this.log.info(`onStateChange datapoint : ${JSON.stringify(lDatapoint)}`);
         }
@@ -593,6 +615,19 @@ class Blebox extends utils.Adapter {
                             break;
                     }
                     break;
+                case 'airsensor':
+                    switch (id) {
+                        case `${this.namespace}.${name}.command.forceMeasurement`:
+                            this.log.info(`force measurement of airsensor`);
+                            response = await this.getSimpleObject(device, 'forceMeasurement', state.val);
+                            this.log.info(`forceMeasurement of airsensor, response: ${JSON.stringify(response)}`);
+                            response['command.forceMeasurement'] = '0';
+                            await tools.setIobStates(response);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 case 'gatebox':
                     // eslint-disable-next-line no-case-declarations
                     let gateboxRefreshJob = {};
@@ -731,6 +766,9 @@ class Blebox extends utils.Adapter {
                 break;
             case 'tvlift':
                 locationUrl = tvlift.getApiUrl(type, val);
+                break;
+            case 'airsensor':
+                locationUrl = airsensor.getApiUrl(type, val);
                 break;
             case 'tempsensor':
                 locationUrl = tempsensor.getApiUrl(type, val);
