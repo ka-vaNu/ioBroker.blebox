@@ -21,6 +21,7 @@ The following devices are currently supported:
 
 | Gerät                | API-Type            | Status                                   |
 |----------------------|---------------------|-----------------------------------------|
+| airsensor            | airsensor           | ❓ alpha, neither tested with real Hardware nor an API-Simulation |
 | gatebox              | gatebox             | ✅ Tested                                |
 | multisensor          | multisensor         | up to 8 sensors per device are supported |
 | tempSensor PRO       | multisensor         | ❓ beta, not tested with real Hardware   |
@@ -50,6 +51,11 @@ The following devices are currently supported:
     Placeholder for the next version:
     ### **WORK IN PROGRESS**
 -->
+
+### 2.2.2 (2025-02-13)
+
+* (Kai van Nuis) Support for airsensor, alpha, neither tested with real Hardware nor an API-Simulation
+* (Kai van Nuis) Support both relay on switchBoxD
 
 ### 2.2.1 (2024-12-26)
 
@@ -85,7 +91,7 @@ The following devices are currently supported:
 ## License
 MIT License
 
-Copyright (c) 2024 Kai van Nuis <kai@vannuis.de>
+Copyright (c) 2025 Kai van Nuis <kai@vannuis.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
