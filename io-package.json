@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "blebox",
-        "version": "2.2.2",
+        "version": "2.2.3",
         "news": {
-            "2.2.2": {
+            "2.2.3": {
                 "en": "Support for airsensor, alpha, neither tested with real Hardware nor an API-Simulation. Support both relay on switchBoxD",
                 "de": "Unterstützung für Airsensor, Alpha, weder mit realen Hardware noch mit API-Simulation getestet. Unterstützt beide Relais auf switchBoxD",
                 "ru": "Поддержка airsensor, alpha, не тестируется с помощью реального оборудования или симуляцией API. Поддержка обоих ретрансляторов",

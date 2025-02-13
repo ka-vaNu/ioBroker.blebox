@@ -52,7 +52,7 @@ The following devices are currently supported:
     ### **WORK IN PROGRESS**
 -->
 
-### 2.2.2 (2025-02-13)
+### 2.2.3 (2025-02-13)
 
 * (Kai van Nuis) Support for airsensor, alpha, neither tested with real Hardware nor an API-Simulation
 * (Kai van Nuis) Support both relay on switchBoxD
