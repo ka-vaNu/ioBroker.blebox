@@ -47,23 +47,17 @@ class Blebox extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
         tools.setIob(this);
         this.datapoints = {};
-        this.extLog = {};
+        this.refreshTimer = {};
     }
 
     /**
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
-        if (this.extLog) {
-            this.log.info(`Full config: ${JSON.stringify(this.config)}`);
-        }
-        if (this.extLog) {
-            this.log.info(`Full mapping: ${JSON.stringify(apiMapping)}`);
-        }
+        this.log.debug(`Full config: ${JSON.stringify(this.config)}`);
+        this.log.debug(`Full mapping: ${JSON.stringify(apiMapping)}`);
         if (Object.prototype.hasOwnProperty.call(this.config, 'devices')) {
-            this.extLog = this.config.extLog;
             this.config.devices.forEach(device => {
-                this.log.info(`Extended logging: ${this.extLog}`);
                 this.log.info(`device name: ${device.dev_name}`);
                 this.log.info(`device smart_name: ${device.smart_name}`);
                 this.log.info(`device type: ${device.dev_type}`);
@@ -73,6 +67,7 @@ class Blebox extends utils.Adapter {
                 this.log.info(`device api: ${device.dev_type} => ${device.api_type}`);
                 tools.initCommon(device.dev_name, device.api_type);
                 tools.getBleboxData(device, 'deviceUptime');
+                this.refreshTimer[device.dev_name] = {};
                 switch (device.api_type) {
                     case 'shutterbox':
                         shutterbox.init();
@@ -80,14 +75,14 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'shutterExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'shutterExtendedState')
-                                    .then(data => this.log.info('shutterExtendedState:', data))
+                                    .then(data => this.log.debug('shutterExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei shutterExtendedState:', err));
                             }, device.polling * 1000);
                         }
@@ -99,10 +94,10 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceNetwork');
                         tools.getBleboxData(device, 'tvliftExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                             }, device.polling * 1000);
                         }
@@ -113,39 +108,39 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'gateExtendedState')
-                                    .then(data => this.log.info('gateExtendedState:', data))
+                                    .then(data => this.log.debug('gateExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei gateExtendedState:', err));
                             }, device.polling * 1000);
                         }
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         break;
                     case 'switchbox':
-                        this.log.info(`device api: ${device.dev_type} => ${device.api_type}`);
+                        this.log.debug(`device api: ${device.dev_type} => ${device.api_type}`);
                         switchbox.init();
                         tools.getBleboxData(device, 'settingsState');
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'switchExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'switchExtendedState')
-                                    .then(data => this.log.info('switchExtendedState:', data))
+                                    .then(data => this.log.debug('switchExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei switchExtendedState:', err));
                             }, device.polling * 1000);
                         }
                         this.subscribeStates(`${device.dev_name}.command.*`);
-                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
+                        this.log.debug(`subscribeStates: ${device.dev_name}.command.*`);
                         break;
                     case 'switchboxD':
                         switchboxD.init();
@@ -153,31 +148,31 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'switchExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', JSON.stringify(data)))
+                                    .then(data => this.log.debug('deviceUptime:', JSON.stringify(data)))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'switchExtendedState')
-                                    .then(data => this.log.info('switchExtendedState:', JSON.stringify(data)))
+                                    .then(data => this.log.debug('switchExtendedState:', JSON.stringify(data)))
                                     .catch(err =>
                                         this.log.error('Fehler bei switchExtendedState:', JSON.stringify(err)),
                                     );
                             }, device.polling * 1000);
                         }
                         this.subscribeStates(`${device.dev_name}.command.*`);
-                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
+                        this.log.debug(`subscribeStates: ${device.dev_name}.command.*`);
                         break;
                     case 'airsensor':
                         airsensor.init();
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'airsensorExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'airsensorExtendedState')
@@ -186,21 +181,21 @@ class Blebox extends utils.Adapter {
                             }, device.polling * 1000);
                         }
                         this.subscribeStates(`${device.dev_name}.command.*`);
-                        this.log.info(`subscribeStates: ${device.dev_name}.command.*`);
+                        this.log.debug(`subscribeStates: ${device.dev_name}.command.*`);
                         break;
                     case 'tempsensor':
                         tempsensor.init();
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'tempsensorExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'tempsensorExtendedState')
-                                    .then(data => this.log.info('tempsensorExtendedState:', data))
+                                    .then(data => this.log.debug('tempsensorExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei tempsensorExtendedState:', err));
                             }, device.polling * 1000);
                         }
@@ -210,14 +205,14 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'deviceState');
                         tools.getBleboxData(device, 'multisensorExtendedState');
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'multisensorExtendedState')
-                                    .then(data => this.log.info('multisensorExtendedState:', data))
+                                    .then(data => this.log.debug('multisensorExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei multisensorExtendedState:', err));
                             }, device.polling * 1000);
                         }
@@ -228,14 +223,14 @@ class Blebox extends utils.Adapter {
                         tools.getBleboxData(device, 'saunaboxExtendedState');
                         this.subscribeStates(`${device.dev_name}.command.*`);
                         if (device.polling > 0) {
-                            device.intervall = setInterval(() => {
+                            this.refreshTimer[device.dev_name].intervall = setInterval(() => {
                                 tools
                                     .getBleboxData(device, 'deviceUptime')
-                                    .then(data => this.log.info('deviceUptime:', data))
+                                    .then(data => this.log.debug('deviceUptime:', data))
                                     .catch(err => this.log.error('Fehler bei deviceUptime:', err));
                                 tools
                                     .getBleboxData(device, 'saunaboxExtendedState')
-                                    .then(data => this.log.info('saunaboxExtendedState:', data))
+                                    .then(data => this.log.debug('saunaboxExtendedState:', data))
                                     .catch(err => this.log.error('Fehler bei saunaboxExtendedState:', err));
                             }, device.polling * 1000);
                         }
@@ -256,7 +251,7 @@ class Blebox extends utils.Adapter {
         this.log.info('Shutting down...');
         for (const device of this.config.devices) {
             if (device.polling > 0) {
-                clearInterval(device.intervall);
+                clearInterval(this.refreshTimer[device.dev_name].intervall);
             }
         }
         try {
@@ -279,14 +274,10 @@ class Blebox extends utils.Adapter {
         this.log.info('onObjectChange');
         if (obj) {
             // The object was changed
-            if (this.extLog) {
-                this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-            }
+            this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
         } else {
             // The object was deleted
-            if (this.extLog) {
-                this.log.info(`object ${id} deleted`);
-            }
+            this.log.info(`object ${id} deleted`);
         }
     }
 
@@ -296,18 +287,20 @@ class Blebox extends utils.Adapter {
      */
     getDeviceByName(name) {
         let ret = {};
-        if (this.extLog) {
-            this.log.info(`getDeviceByName # name : ${name}`);
-        }
+        this.log.debug(`getDeviceByName # name : ${name}`);
         this.config.devices.forEach(device => {
-            if (this.extLog) {
-                this.log.info(`getDeviceByName # device : ${device.dev_name}`);
-            }
+            this.log.debug(`getDeviceByName # device : ${device.dev_name}`);
             if (device.dev_name === name) {
-                if (this.extLog) {
-                    this.log.info(`getDeviceByName # return device : ${device}`);
-                }
-                ret = device;
+                this.log.debug(`getDeviceByName # return device : ${device}`);
+                ret = {
+                    name: device.name,
+                    api_type: device.api_type,
+                    dev_type: device.dev_type,
+                    polling: device.polling,
+                    smart_name: device.smart_name,
+                    dev_ip: device.dev_ip,
+                    dev_port: device.dev_port,
+                };
             }
         });
         return ret;
@@ -322,17 +315,13 @@ class Blebox extends utils.Adapter {
     async onStateChange(id, state) {
         const name = id.split('.')[2];
         const device = this.getDeviceByName(name);
-        this.log.info(`onStateChange id: ${id} state: ${state.val} name: ${name} api_type: ${device.api_type}`);
+        this.log.debug(`onStateChange: ${JSON.stringify(device)}`);
         const lDatapoint = this.datapoints[device.dev_type];
         this.log.info(
             `onStateChange state ${id} changed: ${state.val} (ack = ${state.ack}) name: ${name} api_type: ${device.api_type}`,
         );
-        if (this.extLog) {
-            this.log.info(`onStateChange datapoint : ${JSON.stringify(lDatapoint)}`);
-        }
-        if (this.extLog) {
-            this.log.info(`onStateChange device : ${device}`);
-        }
+        this.log.debug(`onStateChange datapoint : ${JSON.stringify(lDatapoint)}`);
+        this.log.debug(`onStateChange device : ${device}`);
         if (state.ack === false) {
             let response = {};
             // The state was changed
@@ -781,9 +770,7 @@ class Blebox extends utils.Adapter {
                 break;
         }
 
-        if (this.extLog) {
-            this.log.info(`getSimpleObject : ${type} URL: ${locationUrl} device: ${device}`);
-        }
+        this.log.debug(`getSimpleObject : ${type} URL: ${locationUrl} device: ${device}`);
         try {
             values = await tools.simpleObjectUrlGetter(device, locationUrl);
         } catch (error) {
