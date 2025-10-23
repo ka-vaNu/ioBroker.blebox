@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "blebox",
-        "version": "2.2.3",
+        "version": "2.2.4",
         "news": {
+            "2.2.4": {
+                "en": "Support for airsensor, alpha, neither tested with real Hardware nor an API-Simulation. Support both relay on switchBoxD",
+                "de": "Logging verbessert und Fehler behoben",
+                "ru": "Поддержка airsensor, alpha, не тестируется с помощью реального оборудования или симуляцией API. Поддержка обоих ретрансляторов",
+                "pt": "Suporte para airsensor, alfa, nem testado com hardware real nem uma simulação de API. Suporte tanto relé no switchBoxD",
+                "nl": "Ondersteuning voor luchtsensor, alfa, noch getest met echte hardware, noch een API-Simulation. Steun beide relais op switchBoxD",
+                "fr": "Support pour le capteur d'air, alpha, ni testé avec du matériel réel ni une API-Simulation. Prise en charge des deux relais sur switchBoxD",
+                "it": "Supporto per sensore aria, alfa, né testato con hardware reale né una simulazione API. Supporta entrambi i relè su switchBoxD",
+                "es": "Soporte para airsensor, alpha, ni probado con Hardware real ni con API-Simulation. Soporte ambos relés en el interruptorBoxD",
+                "pl": "Wsparcie dla czujnika powietrza, alfa, ani przetestowane z prawdziwego sprzętu lub symulacji API-. Obsługa obu przekaźników na switch BoxD",
+                "uk": "Підтримка повітряних засобів, альфа, не тестується з реальним обладнанням, а не API-Simulation. Підтримка як реле на SwitchBoxD",
+                "zh-cn": "支持气感器,α,既不用真正的硬件测试,也不使用API-模拟. 在切换BoxD上支持两个继电器"
+            },
             "2.2.3": {
                 "en": "Support for airsensor, alpha, neither tested with real Hardware nor an API-Simulation. Support both relay on switchBoxD",
                 "de": "Unterstützung für Airsensor, Alpha, weder mit realen Hardware noch mit API-Simulation getestet. Unterstützt beide Relais auf switchBoxD",
@@ -15,7 +28,7 @@
                 "pl": "Wsparcie dla czujnika powietrza, alfa, ani przetestowane z prawdziwego sprzętu lub symulacji API-. Obsługa obu przekaźników na switch BoxD",
                 "uk": "Підтримка повітряних засобів, альфа, не тестується з реальним обладнанням, а не API-Simulation. Підтримка як реле на SwitchBoxD",
                 "zh-cn": "支持气感器,α,既不用真正的硬件测试,也不使用API-模拟. 在切换BoxD上支持两个继电器"
-              },
+            },
             "2.2.1": {
                 "en": "SensorID is now a number, attributes are now searched for case-insensitively",
                 "de": "SensorID ist jetzt eine Zahl, Attribute werden nun nach case-insensitively gesucht",
