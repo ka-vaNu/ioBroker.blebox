@@ -95,6 +95,21 @@
                 "zh-cn": "实施了“软禁”的支助,改为“I5”。"
             }
         },
+        "plugins": {
+            "sentry": {
+                "dsn": "https://...@.../...",
+                "pathWhitelist": [
+                    "@iobroker",
+                    "iobroker.js-controller"
+                ],
+                "pathBlacklist": [
+                    "scripts.js"
+                ],
+                "errorBlacklist": [
+                    "SyntaxError"
+                ]
+            }
+        },
         "titleLang": {
             "en": "Blebox",
             "de": "Blebox",
