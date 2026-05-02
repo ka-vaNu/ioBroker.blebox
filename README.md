@@ -52,6 +52,9 @@ The following devices are currently supported:
     ### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 2.2.4 (2025-02-16)
 
 * (Kai van Nuis) Improve logging and fixed minor issues
