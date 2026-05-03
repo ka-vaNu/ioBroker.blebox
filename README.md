@@ -93,6 +93,8 @@ The following devices are currently supported:
 
 * First stable release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
