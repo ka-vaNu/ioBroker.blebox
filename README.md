@@ -47,6 +47,9 @@ The following devices are currently supported:
 
 ## Changelog
 
+### **WORK IN PROGRESS**
+- (iobroker-bot) Adapter requires node.js >= 22 now.
+
 <!--
     Placeholder for the next version:
     ### **WORK IN PROGRESS**
